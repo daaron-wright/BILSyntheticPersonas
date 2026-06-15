@@ -305,7 +305,7 @@ function ControlGateModel({ blank }) {
 
 // Columns reference the synthetic personas (see persona cards P-BIL-01…10)
 const RACI_ROLES = [
-  { name: "Henri Lambert", role: "Executive sponsor" },
+  { name: "Olivier Gorin", role: "Executive sponsor" },
   { name: "Claire Weber", role: "Head of Reg. Reporting" },
   { name: "Tom Reuter", role: "AnaCredit Ops Lead" },
   { name: "Ana Marques", role: "CDO / Data steward" },

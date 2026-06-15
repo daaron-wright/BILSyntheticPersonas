@@ -251,15 +251,15 @@ const PERSONAS = [
   },
   {
     id: "P-BIL-08",
-    name: "Henri Lambert",
-    initials: "HL",
-    photo: "assets/personas/henri.png",
+    name: "Olivier Gorin",
+    initials: "OG",
+    photo: "assets/personas/olivier.jpg",
     meta: "he/him · 55 · Luxembourg City",
     role: "Executive Sponsor",
     chips: ["Sponsor", "COO office", "funds the build", "agentic-bank agenda"],
     quote: "AnaCredit is only the lighthouse. The reusable asset is the governed operating pattern.",
     about: [
-      "Henri sponsors this because AnaCredit is a practical place to prove the bank can modernise a regulated workflow safely — specific enough to build, important enough to matter. ",
+      "Olivier sponsors this because AnaCredit is a practical place to prove the bank can modernise a regulated workflow safely — specific enough to build, important enough to matter. ",
       "He needs decisions from the workshop, not inspiration: problem statement, metrics, decision rights, and what the first release will actually prove.",
     ],
     context: [

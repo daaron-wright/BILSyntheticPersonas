@@ -8,7 +8,7 @@ const ACTIVITIES = [
     color: "#29707A", w: 1600, h: 1131,
     outcome: "7 metrics · 3 sponsor decisions",
     voices: [
-      { ini: "HL", name: "Henri Lambert", role: "Executive Sponsor", quote: "Funding stories without baselines — “better quality”, measured how?", probe: "Would this scorecard justify continued funding at steering?", validates: "targets + horizons are measurable", x: 72, y: 18, r: 1.5, component: "Sponsor decisions strip", rect: { x: 2.2, y: 78, w: 95.6, h: 17 }, response: "Yes — if every target stays a number with a date. Two baselines are still estimates; mark them as estimated and I will read all three decisions aloud and own them at steering." },
+      { ini: "OG", name: "Olivier Gorin", role: "Executive Sponsor", quote: "Funding stories without baselines — “better quality”, measured how?", probe: "Would this scorecard justify continued funding at steering?", validates: "targets + horizons are measurable", x: 72, y: 18, r: 1.5, component: "Sponsor decisions strip", rect: { x: 2.2, y: 78, w: 95.6, h: 17 }, response: "Yes — if every target stays a number with a date. Two baselines are still estimates; mark them as estimated and I will read all three decisions aloud and own them at steering." },
       { ini: "CW", name: "Claire Weber", role: "Head of Reg. Reporting", quote: "Defensibility is the real signal — efficiency is welcome, secondary.", probe: "Which of these metrics would you put your name against?", validates: "owners + evidence sources", x: 42, y: 68, r: -1.5, component: "Metric cards · owner & evidence rows", rect: { x: 2.2, y: 12, w: 95.6, h: 64 }, response: "Resubmission rate and correction-loop hours — both have an evidence source I control. The other five need a named owner beside them before I would defend this scorecard anywhere." },
     ],
     stickies: [
@@ -187,7 +187,7 @@ function ProbeSpotlight({ rect, label, done }) {
 /* photo-aware avatar for probe tiles — falls back to initials */
 const CO_PHOTOS = {
   CW: "assets/personas/claire.png", TR: "assets/personas/tom.png", AM: "assets/personas/ana.png",
-  MH: "assets/personas/marc.png", PF: "assets/personas/paul.png", HL: "assets/personas/henri.png",
+  MH: "assets/personas/marc.png", PF: "assets/personas/paul.png", OG: "assets/personas/olivier.jpg",
   DS: "assets/personas/david.png",
 };
 function CoAvatar({ ini, name, size = 26, radius = 6, ring }) {

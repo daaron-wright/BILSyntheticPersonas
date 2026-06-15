@@ -9,7 +9,7 @@ const REG_ROWS = [
   { id: 'P-BIL-05', name: 'Sofia Krier', role: 'Lending Ops Owner', ev: 5, boards: 3, trust: 'No silent upstream mutation', drift: 0.11, status: 'live', loud: 'Data · People' },
   { id: 'P-BIL-06', name: 'Paul Faber', role: 'Internal Audit Lead', ev: 5, boards: 3, trust: 'Replayable runs, provenance on suggestions', drift: 0.13, status: 'review', loud: 'Evidence' },
   { id: 'P-BIL-07', name: 'Elise Hoffmann', role: 'Supervisor Liaison', ev: 6, boards: 3, trust: 'Structured feedback, human-signed responses', drift: 0.06, status: 'live', loud: 'Evidence · Close' },
-  { id: 'P-BIL-08', name: 'Henri Lambert', role: 'Executive Sponsor', ev: 6, boards: 4, trust: 'Automate prepared work, visible accountability', drift: 0.03, status: 'live', loud: 'Value · Close' },
+  { id: 'P-BIL-08', name: 'Olivier Gorin', role: 'Executive Sponsor', ev: 6, boards: 4, trust: 'Automate prepared work, visible accountability', drift: 0.03, status: 'live', loud: 'Value · Close' },
   { id: 'P-BIL-09', name: 'David Schmit', role: 'IT Integration Lead', ev: 6, boards: 4, trust: 'Advisory behind controlled interface', drift: 0.09, status: 'live', loud: 'Controls · Policy' },
   { id: 'P-BIL-10', name: 'Mia Janssens', role: 'Product / Engineering Owner', ev: 6, boards: 5, trust: 'Deterministic first, learning behind', drift: 0.06, status: 'live', loud: 'Close' },
 ];

@@ -124,7 +124,7 @@ function ValueScorecard({ blank }) {
               {!blank ? (
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, color: "var(--k-status-success-100)", fontWeight: 600 }}>
                   <svg width="11" height="11" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16l6 6 14-14"></path></svg>
-                  confirmed aloud — Henri Lambert
+                  confirmed aloud — Olivier Gorin
                 </span>
               ) : <span style={{ fontSize: 10, color: "rgba(255,255,255,0.45)" }}>sponsor reads the wall aloud to confirm</span>}
             </span>

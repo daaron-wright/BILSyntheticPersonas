@@ -168,7 +168,7 @@ const BIL_TALK = {
     probes: ['What does the BCL actually ask first?', 'One-off or structural — how do you tell?', 'What timing commitments are safe?', 'What must never be auto-sent?'],
   },
   'P-BIL-08': {
-    name: 'Henri Lambert', label: 'The Sponsor', photo: 'assets/personas/henri.png', role: 'Executive Sponsor · funds the build',
+    name: 'Olivier Gorin', label: 'The Sponsor', photo: 'assets/personas/olivier.jpg', role: 'Executive Sponsor · funds the build',
     accent: '#FF8766', accentDeep: '#FF462D', orbMood: 'engaged', sourceCount: 6, version: 'v0.9', contextLabel: 'Decisive · value-led',
     quote: 'Every month a team I rarely see performs a quiet rescue, and we book it as business as usual.',
     sample: [
@@ -231,7 +231,7 @@ const BIL_ROSTER = [
   { id: 'P-BIL-05', name: 'Sofia Krier', role: 'Lending Ops Owner', ev: 5, tone: 'spruce', status: 'live' },
   { id: 'P-BIL-06', name: 'Paul Faber', role: 'Internal Audit Lead', ev: 5, tone: 'warning', status: 'review' },
   { id: 'P-BIL-07', name: 'Elise Hoffmann', role: 'Supervisor Liaison', ev: 6, tone: 'spruce', status: 'live' },
-  { id: 'P-BIL-08', name: 'Henri Lambert', role: 'Executive Sponsor', ev: 6, tone: 'spruce', status: 'live' },
+  { id: 'P-BIL-08', name: 'Olivier Gorin', role: 'Executive Sponsor', ev: 6, tone: 'spruce', status: 'live' },
   { id: 'P-BIL-09', name: 'David Schmit', role: 'IT Integration Lead', ev: 6, tone: 'spruce', status: 'live' },
   { id: 'P-BIL-10', name: 'Mia Janssens', role: 'Product / Eng Owner', ev: 6, tone: 'spruce', status: 'live' },
 ];
