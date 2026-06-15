@@ -427,15 +427,23 @@ async function sendChatMessage(persona, messages) {
     body: JSON.stringify({ system, messages: apiMessages }),
   });
 
+  const data = await res.json().catch(() => null);
+
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const errMsg = data?.error?.message || data?.error || `HTTP ${res.status}`;
+    throw new Error(typeof errMsg === 'string' ? errMsg : JSON.stringify(errMsg));
   }
 
-  const data = await res.json();
   // Claude API returns { content: [{ type: 'text', text: '...' }] }
-  const text = data.content?.map(b => b.text).join('') || data.error || 'No response';
-  return text;
+  if (data?.content && Array.isArray(data.content)) {
+    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    if (text) return text;
+  }
+
+  // Fallback: surface whatever we got as a readable error
+  const fallback = data?.error?.message || data?.error;
+  if (fallback) throw new Error(typeof fallback === 'string' ? fallback : JSON.stringify(fallback));
+  return 'No response';
 }
 
 // Text-to-speech via ElevenLabs proxy
