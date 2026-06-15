@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AnaCredit Workshop — Collateral Pack</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<link rel="stylesheet" href="collateral/collateral.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  .screen-surface { background: var(--bg-2); width: 100%; height: 100%; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="collateral/sheet-parts.jsx"></script>
+<script type="text/babel" src="collateral/cards.jsx"></script>
+<script type="text/babel" src="collateral/personas.jsx"></script>
+<script type="text/babel" src="collateral/canvases-a.jsx"></script>
+<script type="text/babel" src="collateral/canvases-b.jsx"></script>
+<script type="text/babel" src="collateral/canvases-c.jsx"></script>
+<script type="text/babel" src="bil-os/shell.jsx"></script>
+<script type="text/babel" src="bil-os/persona-orb.jsx"></script>
+<script type="text/babel" src="bil-os/talk.jsx"></script>
+<script type="text/babel" src="bil-os/registry.jsx"></script>
+<script type="text/babel" src="bil-os/lab.jsx"></script>
+<script type="text/babel" src="bil-os/ops.jsx"></script>
+<script type="text/babel" src="bil-os/cross.jsx"></script>
+<script type="text/babel" src="bil-os/architecture.jsx"></script>
+
+<script type="text/babel">
+function CollateralPack() {
+  return (
+    <DesignCanvas title="AnaCredit Workshop — Collateral Pack">
+
+      <DCSection
+        id="exit-capture"
+        title="09:00–09:30 · Arrival and Igloo exit capture"
+        subtitle="Day navigation, exit capture, and the shared sticker vocabulary used on every wall"
+      >
+        <DCArtboard id="agenda" label="Agenda amendment · A4" width={794} height={1123}>
+          <AgendaSheet />
+        </DCArtboard>
+        <DCArtboard id="exit-card" label="Igloo exit card · A6" width={420} height={595}>
+          <ExitCard />
+        </DCArtboard>
+        <DCArtboard id="stickers" label="Dot &amp; severity stickers · A4" width={794} height={1123}>
+          <StickerSheet />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="value"
+        title="09:30–10:20 · Value"
+        subtitle="Convert the business challenge into a measurable value case — Value Scorecard"
+      >
+        <DCArtboard id="value-scorecard" label="Value Scorecard · A1" width={1600} height={1131}>
+          <ValueScorecard />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="data"
+        title="10:20–11:35 · Data"
+        subtitle="Make current-state failure points tangible, then prove the bank can trace one exposure"
+      >
+        <DCArtboard id="breakpoint-map" label="Breakpoint Map wall · A0" width={2000} height={1414}>
+          <BreakpointMap />
+        </DCArtboard>
+        <DCArtboard id="one-loan-trace" label="One-Loan Trace · A3" width={1100} height={778}>
+          <OneLoanTrace />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="policy"
+        title="11:35–12:35 · Policy"
+        subtitle="Source hierarchy cards plus the authority-tagged rule catalogue"
+      >
+        {AUTHORITY_TIERS.map((t) => (
+          <DCArtboard key={t.n} id={"auth-" + t.n} label={`Authority tier ${t.n} · A5`} width={620} height={438}>
+            <AuthorityCard tier={t} />
+          </DCArtboard>
+        ))}
+        <DCArtboard id="rule-catalogue" label="PaC Rule Catalogue · A1" width={1600} height={1131}>
+          <RuleCatalogue />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="controls"
+        title="13:20–14:20 · Controls"
+        subtitle="Where the system blocks, warns, suggests — and where a human must approve"
+      >
+        <DCArtboard id="gate-model" label="Control Gate Model · A1" width={1600} height={1131}>
+          <ControlGateModel />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="people"
+        title="14:20–15:15 · People"
+        subtitle="Ten synthetic persona profiles — characteristic composites from the transcripts — plus the decision-rights wall"
+      >
+        {PERSONAS.map((p, i) => (
+          <DCArtboard key={p.id} id={"persona-" + (i + 1)} label={`${p.id} · ${p.name} · A4`} width={1123} height={794}>
+            <PersonaCard p={p} idx={i} />
+          </DCArtboard>
+        ))}
+        <DCArtboard id="raci-wall" label="Persona/RACI wall · A1" width={1600} height={1131}>
+          <RaciWall />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="evidence"
+        title="15:15–16:10 · Evidence"
+        subtitle="The trust record the system must produce for reporting, audit, and supervision"
+      >
+        <DCArtboard id="trust-record" label="Trust Record · A1" width={1600} height={1131}>
+          <TrustRecord />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="close"
+        title="16:10–17:00 · Demo contract and close"
+        subtitle="Fix first-build proof points, plus the all-day governance log"
+      >
+        <DCArtboard id="demo-contract" label="Demo Contract board · A1" width={1600} height={1131}>
+          <DemoContract />
+        </DCArtboard>
+        <DCArtboard id="open-questions" label="Open questions log · A3" width={1100} height={778}>
+          <OpenQuestionsLog />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="h1-registry"
+        title="Horizon 1 · Referenceable persona registry"
+        subtitle="Evidence in, structured personas out — every number traces to a transcript answer or a board cell"
+      >
+        <DCArtboard id="h1-evidence" label="H1-01 · Evidence intake" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilEvidence /></div>
+        </DCArtboard>
+        <DCArtboard id="h1-registry-screen" label="H1-02 · Persona registry" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilRegistry /></div>
+        </DCArtboard>
+        <DCArtboard id="h1-talk-claire" label="H1-03 · Talk to persona · Claire Weber" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilTalk personaId="P-BIL-01" /></div>
+        </DCArtboard>
+        <DCArtboard id="h1-talk-sofia" label="H1-04 · Talk to persona · Sofia Krier" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilTalk personaId="P-BIL-05" /></div>
+        </DCArtboard>
+        <DCArtboard id="h1-talk-paul" label="H1-05 · Talk to persona · Paul Faber" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilTalk personaId="P-BIL-06" /></div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="h2-lab"
+        title="Horizon 2 · Scenario lab + policy gate"
+        subtitle="Simulate, gate, and approve — decisions are played against the persona cohort before they reach the build"
+      >
+        <DCArtboard id="h2-scenario" label="H2-01 · Scenario lab · SCN-04" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilScenario /></div>
+        </DCArtboard>
+        <DCArtboard id="h2-gate" label="H2-02 · Policy-as-code gate" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilGate /></div>
+        </DCArtboard>
+        <DCArtboard id="h2-queue" label="H2-03 · Human approval queue" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilQueue /></div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="nascent-ops"
+        title="Nascent business operations"
+        subtitle="Downstream impact across functions, attributed to persona-aware decisions — design targets, not achieved outcomes"
+      >
+        <DCArtboard id="ops-impact" label="OPS-01 · Business impact index" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilOps /></div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="cross-cutting"
+        title="Cross-cutting · live agent + governance"
+        subtitle="The agentic surface in motion, and the inbox where human overrides become governed learning"
+      >
+        <DCArtboard id="cross-agent" label="CC-01 · Live agent run" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilLiveAgent /></div>
+        </DCArtboard>
+        <DCArtboard id="cross-inbox" label="CC-02 · Governance inbox" width={1440} height={900}>
+          <div className="screen-surface"><ScreenBilInbox /></div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="architecture"
+        title="System architecture"
+        subtitle="The KAF node graph — sources, ingestion, policy & agent plane, human plane, outputs, with the Persona OS governance loop underneath"
+      >
+        <DCArtboard id="arch-kaf" label="ARCH-01 · KAF architecture · BiL AnaCredit" width={1800} height={1010}>
+          <div className="screen-surface"><ScreenBilArchitecture /></div>
+        </DCArtboard>
+      </DCSection>
+
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<CollateralPack />);
+</script>
+</body>
+</html>

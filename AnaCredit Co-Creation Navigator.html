@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AnaCredit Co-Creation Day</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; min-height: 100%; background: var(--bg-2); }
+  body { font-family: var(--font-sans); color: var(--fg-2); display: flex; flex-direction: column; }
+
+  .nav-wrap { max-width: 1480px; width: 100%; margin: 0 auto; padding: 48px 56px 64px; box-sizing: border-box; flex: 1; display: flex; flex-direction: column; }
+
+  .nav-top { display: flex; justify-content: space-between; align-items: center; }
+  .nav-top img { height: 36px; display: block; }
+  .nav-top .who { font-size: 13px; color: var(--fg-muted); }
+
+  .hero { margin-top: 64px; }
+  .hero .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--k-warm-red-50); }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 400; font-size: 72px; letter-spacing: -0.02em;
+    line-height: 1.02; color: var(--fg-1); margin: 18px 0 0; max-width: 21ch; text-wrap: pretty;
+  }
+  .hero p { font-size: 18px; color: var(--fg-muted); margin: 22px 0 0; max-width: 52ch; line-height: 1.5; }
+
+  .flow { display: flex; align-items: stretch; gap: 0; margin-top: 64px; }
+  .step {
+    flex: 1; background: #fff; border: 1px solid var(--border-1); border-radius: 12px;
+    padding: 26px 24px 24px; display: flex; flex-direction: column; gap: 16px;
+    text-decoration: none; color: inherit; position: relative;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+  }
+  .step:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(15,23,42,0.12); }
+  .step .topline { display: flex; justify-content: space-between; align-items: baseline; }
+  .step .num { font-family: var(--font-display); font-weight: 300; font-size: 46px; line-height: 1; }
+  .step .time { font-family: var(--font-mono); font-size: 11px; color: var(--fg-muted); }
+  .step h2 { font-family: var(--font-display); font-weight: 500; font-size: 24px; color: var(--fg-1); margin: 0; letter-spacing: -0.01em; }
+  .step .out { font-size: 13px; color: var(--fg-muted); margin-top: -8px; }
+  .step .out strong { color: var(--fg-1); font-weight: 500; }
+  .step svg { display: block; }
+
+  .arrow { flex: 0 0 40px; display: flex; align-items: center; justify-content: center; color: var(--fg-subtle); font-size: 24px; }
+
+  .step.final { background: var(--k-dark-stone-90); border-color: var(--k-dark-stone-90); color: #fff; flex: 1.12; }
+  .step.final h2 { color: #fff; }
+  .step.final .out { color: rgba(255,255,255,0.65); }
+  .step.final .out strong { color: #fff; }
+  .step.final .time { color: rgba(255,255,255,0.5); }
+  .step.final:hover { box-shadow: 0 18px 40px rgba(15,23,42,0.35); }
+
+  .legend { margin-top: 44px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .legend .left { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--fg-muted); }
+  .legend .stickychip { width: 28px; height: 18px; background: #fff; border: 1px solid var(--border-1); border-radius: 3px; box-shadow: 0 1px 4px rgba(15,23,42,0.20); transform: rotate(-2deg); }
+  .legend .left strong { color: var(--fg-1); font-weight: 500; }
+  .cohort-strip { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--fg-muted); text-decoration: none; }
+  .cohort-strip strong { color: var(--fg-1); font-weight: 500; }
+  .cohort-strip .avs { display: flex; }
+  .cohort-strip .avs a {
+    width: 26px; height: 26px; border-radius: 999px; background: var(--k-ai-spruce-12); color: var(--k-spruce-70);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700;
+    border: 2px solid var(--bg-2); margin-left: -6px; text-decoration: none; transition: transform 0.12s ease, background 0.12s ease;
+  }
+  .cohort-strip .avs a:first-child { margin-left: 0; }
+  .cohort-strip .avs a:hover { transform: translateY(-2px); background: var(--k-spruce-60); color: #fff; position: relative; z-index: 1; }
+  .cohort-strip .text { color: inherit; text-decoration: none; }
+  .cohort-strip .text:hover strong { text-decoration: underline; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--k-warm-red-50); color: #fff; text-decoration: none;
+    font-size: 15px; font-weight: 500; padding: 14px 26px; border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+  .cta:hover { background: var(--k-warm-red-60, #D63A24); }
+
+  .foot { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border-1); display: flex; justify-content: space-between; font-size: 12px; color: var(--fg-muted); }
+  .foot .mono { font-family: var(--font-mono); font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="nav-wrap">
+  <div class="nav-top">
+    <img src="assets/kyndryl-vital-logo.png" alt="Kyndryl Vital" />
+    <span class="who">BiL · AnaCredit workshop</span>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Co-creation day</div>
+    <h1>Four activities. One demo contract.</h1>
+    <p>Click through the agenda with a single arrow — each board toggles between the blank co-creation template and the filled outcome, building to the agentic target state.</p>
+  </div>
+
+  <div class="flow">
+    <a class="step" href="AnaCredit Workshop Walkthrough.html?step=1">
+      <span class="topline"><span class="num" style="color:#29707A">01</span><span class="time">09:30–10:20</span></span>
+      <svg width="100" height="68" viewBox="0 0 96 66"><rect x="1" y="1" width="94" height="64" rx="6" fill="#fff" stroke="#D8DBDE"></rect><g><rect x="8" y="14" width="17" height="9" rx="1.5" fill="#29707A"></rect><rect x="29" y="14" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="50" y="14" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="71" y="14" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="8" y="27" width="17" height="9" rx="1.5" fill="#29707A"></rect><rect x="29" y="27" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="50" y="27" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="71" y="27" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="8" y="40" width="17" height="9" rx="1.5" fill="#29707A"></rect><rect x="29" y="40" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="50" y="40" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect><rect x="71" y="40" width="17" height="9" rx="1.5" fill="#E2E4E7"></rect></g></svg>
+      <h2>Frame the value</h2>
+      <span class="out">→ <strong>7 metrics · 3 sponsor decisions</strong></span>
+    </a>
+    <span class="arrow">→</span>
+
+    <a class="step" href="AnaCredit Workshop Walkthrough.html?step=2">
+      <span class="topline"><span class="num" style="color:#3E8AC2">02</span><span class="time">10:20–11:35</span></span>
+      <svg width="100" height="68" viewBox="0 0 96 66"><rect x="1" y="1" width="94" height="64" rx="6" fill="#fff" stroke="#D8DBDE"></rect><g><rect x="8" y="14" width="24" height="12" rx="1.5" fill="#3E8AC2"></rect><rect x="8" y="30" width="24" height="12" rx="1.5" fill="#3E8AC2"></rect><rect x="8" y="46" width="24" height="12" rx="1.5" fill="#3E8AC2"></rect><rect x="38" y="14" width="21" height="12" rx="1.5" fill="#E2E4E7"></rect><rect x="63" y="14" width="21" height="12" rx="1.5" fill="#E2E4E7"></rect><rect x="38" y="30" width="21" height="12" rx="1.5" fill="#E2E4E7"></rect><rect x="63" y="30" width="21" height="12" rx="1.5" fill="#E2E4E7"></rect><rect x="38" y="46" width="21" height="12" rx="1.5" fill="#E2E4E7"></rect><rect x="63" y="46" width="21" height="12" rx="1.5" fill="#E2E4E7"></rect><path d="M34 20 h2 M34 36 h2 M34 52 h2" stroke="#3E8AC2" stroke-width="1.5"></path></g></svg>
+      <h2>Trace one loan through the AnaCredit process in BiL</h2>
+      <span class="out">→ <strong>1 loan traced · stewards named</strong></span>
+    </a>
+    <span class="arrow">→</span>
+
+    <a class="step" href="AnaCredit Workshop Walkthrough.html?step=3">
+      <span class="topline"><span class="num" style="color:#8A4FBF">03</span><span class="time">11:35–12:35</span></span>
+      <svg width="100" height="68" viewBox="0 0 96 66"><rect x="1" y="1" width="94" height="64" rx="6" fill="#fff" stroke="#D8DBDE"></rect><g><rect x="8" y="12" width="10" height="9" rx="1.5" fill="#8A4FBF"></rect><rect x="22" y="12" width="50" height="9" rx="1.5" fill="#E2E4E7"></rect><circle cx="82" cy="16.5" r="4.5" fill="#8A4FBF"></circle><rect x="8" y="25" width="10" height="9" rx="1.5" fill="#8A4FBF"></rect><rect x="22" y="25" width="50" height="9" rx="1.5" fill="#E2E4E7"></rect><circle cx="82" cy="29.5" r="4.5" fill="#8A4FBF"></circle><rect x="8" y="38" width="10" height="9" rx="1.5" fill="#8A4FBF"></rect><rect x="22" y="38" width="50" height="9" rx="1.5" fill="#E2E4E7"></rect><circle cx="82" cy="42.5" r="4.5" fill="#8A4FBF"></circle><rect x="8" y="51" width="10" height="9" rx="1.5" fill="#8A4FBF"></rect><rect x="22" y="51" width="50" height="9" rx="1.5" fill="#E2E4E7"></rect><circle cx="82" cy="55.5" r="4.5" fill="#E2E4E7"></circle></g></svg>
+      <h2>Sort what rules apply</h2>
+      <span class="out">→ <strong>7 rules tagged · OPA shortlist</strong></span>
+    </a>
+    <span class="arrow">→</span>
+
+    <a class="step" href="AnaCredit Workshop Walkthrough.html?step=4">
+      <span class="topline"><span class="num" style="color:#E68A00">04</span><span class="time">13:20–14:20</span></span>
+      <svg width="100" height="68" viewBox="0 0 96 66"><rect x="1" y="1" width="94" height="64" rx="6" fill="#fff" stroke="#D8DBDE"></rect><g><rect x="8" y="16" width="18" height="34" rx="1.5" fill="#F3F4F5"></rect><rect x="8" y="16" width="18" height="7" rx="1.5" fill="#E68A00"></rect><rect x="32" y="16" width="18" height="34" rx="1.5" fill="#E2E4E7"></rect><rect x="32" y="16" width="18" height="7" rx="1.5" fill="#E68A00"></rect><rect x="56" y="16" width="18" height="34" rx="1.5" fill="#F3F4F5"></rect><rect x="56" y="16" width="18" height="7" rx="1.5" fill="#E68A00"></rect><path d="M27 33 l4 0 M51 33 l4 0" stroke="#E68A00" stroke-width="2"></path></g></svg>
+      <h2>Draw the gates</h2>
+      <span class="out">→ <strong>6 gates · approvers named</strong></span>
+    </a>
+    <span class="arrow">→</span>
+
+    <a class="step final" href="AnaCredit Workshop Walkthrough.html?step=5">
+      <span class="topline"><span class="num" style="color:#FF8766">05</span><span class="time">16:10–17:00</span></span>
+      <svg width="100" height="68" viewBox="0 0 96 66"><rect x="1" y="1" width="94" height="64" rx="6" fill="#2B2B2B" stroke="#4A4A4A"></rect><g><rect x="8" y="22" width="16" height="10" rx="1.5" fill="#4A4A4A"></rect><rect x="8" y="36" width="16" height="10" rx="1.5" fill="#4A4A4A"></rect><rect x="32" y="24" width="22" height="18" rx="3" fill="#FF462D"></rect><rect x="62" y="26" width="24" height="14" rx="1.5" fill="#4A4A4A"></rect><path d="M26 33 l4 0 M56 33 l4 0" stroke="#FF8766" stroke-width="2"></path><path d="M43 44 v6 h-8 M43 18 v-6 h-8" stroke="#5BA2AE" stroke-width="1.5" fill="none"></path></g></svg>
+      <h2>Envisioned target state</h2>
+      <span class="out">→ <strong>Agentic AI process</strong> · e2e ~few hours · human in the loop</span>
+    </a>
+  </div>
+
+  <div class="legend">
+    <span class="left">
+      <span class="stickychip"></span>
+      <span>Every board has two states: <strong>blank with stickies</strong> (what we do) and the <strong>filled outcome</strong> (what we leave with).</span>
+    </span>
+    <div class="cohort-strip">
+      <span class="avs">
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-01" title="Talk to Claire Weber">CW</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-02" title="Talk to Tom Reuter">TR</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-03" title="Talk to Ana Marques">AM</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-04" title="Talk to Marc Holzem">MH</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-05" title="Talk to Sofia Krier">SK</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-06" title="Talk to Paul Faber">PF</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-07" title="Talk to Elise Hoffmann">EH</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-08" title="Talk to Henri Lambert">HL</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-09" title="Talk to David Schmit">DS</a>
+        <a href="AnaCredit Workshop Walkthrough.html?slide=2&amp;talk=P-BIL-10" title="Talk to Mia Janssens">MJ</a>
+      </span>
+      <a class="text" href="AnaCredit Workshop Walkthrough.html?slide=2">Grounded in <strong>10 synthetic personas</strong> — click any to talk to them.</a>
+    </div>
+    <a class="cta" href="AnaCredit Workshop Walkthrough.html">Start the walkthrough →</a>
+  </div>
+
+  <div class="foot">
+    <span>AnaCredit Workshop · BiL · Kyndryl Agentic Framework</span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,3 @@
+/* Forwarded to the colors_and_type.css at the project root via staticDirs.
+   At dev/build time Vite serves it; this file just imports it. */
+@import "../../colors_and_type.css";

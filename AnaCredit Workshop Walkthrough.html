@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AnaCredit Co-Creation Walkthrough</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<link rel="stylesheet" href="collateral/collateral.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="image-slot.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: var(--bg-2); }
+  #root { height: 100%; }
+  .wt-arrow {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 20;
+    width: 54px; height: 54px; border-radius: 999px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    font-family: var(--font-sans); transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  }
+  .wt-arrow:hover:not(:disabled) { transform: translateY(-50%) scale(1.08); }
+  .wt-arrow:disabled { opacity: 0.25; cursor: default; }
+  .wt-next { right: 22px; background: var(--k-warm-red-50); color: #fff; box-shadow: 0 10px 26px rgba(255,70,45,0.4); }
+  .wt-prev { left: 22px; background: #fff; color: var(--fg-1); border: 1px solid var(--border-1); box-shadow: 0 4px 14px rgba(15,23,42,0.12); }
+  .wt-step-btn { background: transparent; border: none; cursor: pointer; font-family: var(--font-sans); padding: 0 12px; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 2px; border-bottom: 3px solid transparent; border-top: 3px solid transparent; min-width: 0; flex: 0 1 auto; overflow: hidden; }
+  .wt-step-row { display: flex; align-items: baseline; gap: 7px; min-width: 0; }
+  .wt-step-title { font-size: 12px; color: var(--fg-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 140px; }
+  .wt-step-time { font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-muted); white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+  @media (max-width: 1380px) {
+    .wt-step-title { display: none; }
+    .wt-step-btn { padding: 0 9px; }
+  }
+  @media (max-width: 980px) {
+    .wt-step-time { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="collateral/sheet-parts.jsx"></script>
+<script type="text/babel" src="collateral/canvases-a.jsx"></script>
+<script type="text/babel" src="collateral/canvases-b.jsx"></script>
+<script type="text/babel" src="collateral/canvases-c.jsx"></script>
+<script type="text/babel" src="collateral/personas.jsx"></script>
+<script type="text/babel" src="collateral/cocreate.jsx"></script>
+<script type="text/babel" src="collateral/cohort.jsx"></script>
+<script type="text/babel" src="collateral/pac-schema.jsx"></script>
+<script type="text/babel" src="collateral/target-network.jsx"></script>
+<script type="text/babel" src="collateral/tobe-journey.jsx"></script>
+<script type="text/babel" src="collateral/contract-stage.jsx"></script>
+<script type="text/babel" src="collateral/movetitle.jsx"></script>
+<script type="text/babel" src="bil-os/persona-orb.jsx"></script>
+<script type="text/babel" src="bil-os/talk.jsx"></script>
+<script type="text/babel" src="bil-os/shell.jsx"></script>
+<script type="text/babel" src="bil-os/portal.jsx"></script>
+
+<script type="text/babel">
+// agenda groups shown in the stepper
+const WT_GROUPS = [
+  { n: "00", time: "pre-work", short: "The cohort", title: "The cohort · pre-work foundation", color: "#5BA2AE" },
+  { n: "01", time: "09:30–10:20", short: "Frame the value", title: "Frame the value", color: "#29707A" },
+  { n: "02", time: "10:20–11:35", short: "Trace one loan", title: "Trace one loan through the AnaCredit process in BiL", color: "#3E8AC2" },
+  { n: "03", time: "11:35–12:35", short: "Sort what rules apply", title: "Sort what rules apply", color: "#8A4FBF" },
+  { n: "04", time: "13:20–14:20", short: "Draw the gates", title: "Draw the gates", color: "#E68A00" },
+  { n: "05", time: "16:10–17:00", short: "Envisioned target state", title: "Envisioned target state — Agentic AI process · e2e ~few hours", color: "#FF462D" },
+];
+
+// a move-divider title slide (one in front of each move) from MOVE_TITLES
+const mtSlide = (k) => {
+  const m = MOVE_TITLES[k];
+  return { g: m.g, kind: "title", title: m.title, outcome: m.outcome, w: 1920, h: 1080, board: () => <MoveTitleSlide move={m} /> };
+};
+
+// flat slide sequence the single arrow walks through
+const WT_SLIDES = [
+  { g: 0, kind: "plain", title: "The day at a glance · 00–05", outcome: "six moves · one demo contract · validated live", w: 2000, h: 1060, board: () => <DayOverviewBoard /> },
+  mtSlide(0),
+  { g: 0, kind: "plain", key: "cohort", beats: (window.COHORT_FEATURED || []).length + 1, hint: "→ walks 3 persona conversations", title: "The cohort · pre-work foundation", outcome: "10 synthetic voices · 3 open to talk to live", w: 2000, h: 780, board: (beat) => <CohortBoard talkBeat={beat || 0} /> },
+  mtSlide(1),
+  { g: 1, kind: "activity", activity: 0, title: "Frame the value", outcome: "7 metrics · 3 sponsor decisions", w: 1600, h: 1131, board: (blank) => <ValueScorecard blank={blank} /> },
+  mtSlide(2),
+  { g: 2, kind: "activity", activity: 1, title: "Trace one loan through the AnaCredit process in BiL", outcome: "1 loan traced · stewards named", w: 1600, h: 1131, board: (blank) => <OneLoanTrace blank={blank} /> },
+  mtSlide(3),
+  { g: 3, kind: "activity", activity: 2, title: "Sort what rules apply", outcome: "7 rules tagged · OPA shortlist", w: 1600, h: 1131, board: (blank) => <RuleCatalogue blank={blank} /> },
+  mtSlide(4),
+  { g: 4, kind: "activity", activity: 3, title: "Draw the gates", outcome: "6 gates · approvers named", w: 1600, h: 1131, board: (blank) => <ControlGateModel blank={blank} /> },
+  mtSlide(5),
+  { g: 5, kind: "plain", title: "Envisioned target state — Agentic AI process", outcome: "e2e ~few hours · human in the loop · no manual corrections", w: 2000, h: 1060, board: () => <TargetStateNetwork /> },
+  { g: 5, kind: "plain", beats: (window.DCS_FEATURED || []).length + 2, hint: "→ walks the 4 core moments · then hand-off", title: "Demo Contract · P0 frozen + to-be journey", outcome: "core agentic loop · wireframes plugged into each moment", w: 2300, h: 1380, board: (beat) => <DemoContractStage beat={beat} /> },
+];
+
+const WT_LS = "anacredit.walkthrough.v4";
+
+function loadState() {
+  let s = { slide: 0, beat: 0, filled: false };
+  try { s = { ...s, ...(JSON.parse(localStorage.getItem(WT_LS)) || {}) }; } catch (e) {}
+  const sp = new URLSearchParams(location.search);
+  const p = sp.get("step");
+  if (p !== null) {
+    const g = parseInt(p, 10);
+    const first = WT_SLIDES.findIndex((sl) => sl.g === g);
+    if (first >= 0) { s.slide = first; s.beat = 0; }
+  }
+  const sl = sp.get("slide");
+  if (sl !== null) {
+    const n = parseInt(sl, 10) - 1;
+    if (n >= 0 && n < WT_SLIDES.length) { s.slide = n; s.beat = 0; }
+  }
+  // ?talk=P-BIL-XX → land on the cohort slide with that conversation open (as a beat).
+  // Only the featured (clickable) personas are walked; others fall back to the wall.
+  const t = sp.get("talk");
+  if (t) {
+    const ci = WT_SLIDES.findIndex((sl) => sl.key === "cohort");
+    const fi = (window.COHORT_FEATURED || []).indexOf(t);
+    if (ci >= 0) { s.slide = ci; s.beat = fi >= 0 ? fi + 1 : 0; }
+  }
+  if (s.slide < 0 || s.slide >= WT_SLIDES.length) s.slide = 0;
+  if (typeof s.beat !== "number" || s.beat < 0) s.beat = 0;
+  return s;
+}
+
+function Stage({ w, h, children }) {
+  const ref = React.useRef(null);
+  const [scale, setScale] = React.useState(0);
+  React.useEffect(() => {
+    const el = ref.current;
+    const fit = () => {
+      const r = el.getBoundingClientRect();
+      setScale(Math.min((r.width - 48) / w, (r.height - 36) / h));
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [w, h]);
+  return (
+    <div ref={ref} style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      {scale > 0 ? (
+        <div style={{ width: w * scale, height: h * scale, flex: "0 0 auto" }}>
+          <div style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: "top left", boxShadow: "0 18px 50px rgba(15,23,42,0.16)", borderRadius: 8, overflow: "hidden", background: "#fff" }}>
+            {children}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function Walkthrough() {
+  const init = React.useMemo(loadState, []);
+  const [slide, setSlide] = React.useState(init.slide);
+  const [beat, setBeat] = React.useState(init.beat);
+  const [filled, setFilled] = React.useState(init.filled);
+  const s = WT_SLIDES[slide];
+  const isActivity = s.kind === "activity";
+  const groupSlides = WT_SLIDES.map((sl, i) => ({ ...sl, i })).filter((sl) => sl.g === s.g);
+
+  // in-board beat sequence: intro → step 1..n → (arm → ask) per persona → outcome
+  const act = isActivity ? ACTIVITIES[s.activity] : null;
+  const nSteps = act ? act.stickies.length : 0;
+  const nVoices = act ? (act.voices || []).length : 0;
+  const nBeats = act ? 1 + nSteps + nVoices * 2 + 1 : (s.beats || 1);
+  const b = Math.min(beat, nBeats - 1);
+  const stepActive = act && b >= 1 && b <= nSteps ? b - 1 : -1;
+  const stepsDone = act ? Math.min(nSteps, Math.max(0, b - 1 + (b > nSteps ? 1 : 0))) : 0;
+  const personaBase = 1 + nSteps;
+  const outcomeBeat = act ? personaBase + nVoices * 2 : -1;
+  const probeStages = act ? (act.voices || []).map((v, i) => {
+    const armedBeat = personaBase + i * 2;
+    if (b >= armedBeat + 1) return "ask";
+    if (b === armedBeat) return "armed";
+    return "idle";
+  }) : [];
+
+  React.useEffect(() => {
+    try { localStorage.setItem(WT_LS, JSON.stringify({ slide, beat, filled })); } catch (e) {}
+  }, [slide, beat, filled]);
+
+  // the outcome state is the final beat of each activity
+  React.useEffect(() => {
+    if (isActivity) setFilled(b >= outcomeBeat);
+  }, [slide, b]);
+
+  const go = (n) => { setSlide(Math.max(0, Math.min(WT_SLIDES.length - 1, n))); setBeat(0); };
+  const next = () => { if (b < nBeats - 1) setBeat(b + 1); else if (slide < WT_SLIDES.length - 1) go(slide + 1); };
+  const prev = () => { if (b > 0) setBeat(b - 1); else if (slide > 0) go(slide - 1); };
+  const goGroup = (g) => {
+    const first = WT_SLIDES.findIndex((sl) => sl.g === g);
+    if (first >= 0) go(first);
+  };
+
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key.toLowerCase() === "t" && WT_SLIDES[slide].kind === "activity") setFilled((f) => !f);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [slide, beat, nBeats, isActivity]);
+
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", fontFamily: "var(--font-sans)", color: "var(--fg-2)" }}>
+
+      {/* top bar */}
+      <header style={{ flex: "0 0 auto", height: 72, background: "#fff", borderBottom: "1px solid var(--border-1)", display: "flex", alignItems: "stretch", padding: "0 24px", gap: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flex: "0 0 auto" }}>
+          <img src="assets/kyndryl-vital-logo.png" alt="Kyndryl Vital" style={{ height: 30, display: "block" }} />
+          <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--fg-muted)" }}>BiL · AnaCredit</div>
+        </div>
+
+        {/* agenda stepper */}
+        <nav style={{ flex: 1, display: "flex", alignItems: "stretch", justifyContent: "center", minWidth: 0, overflow: "hidden" }}>
+          {WT_GROUPS.map((it, g) => {
+            const active = g === s.g;
+            const subs = WT_SLIDES.filter((sl) => sl.g === g);
+            return (
+              <button key={it.n} className="wt-step-btn" onClick={() => goGroup(g)}
+                style={{ borderBottomColor: active ? it.color : "transparent", opacity: active ? 1 : 0.55, maxWidth: 200 }}>
+                <span className="wt-step-row">
+                  <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 17, color: active ? it.color : "var(--fg-muted)" }}>{it.n}</span>
+                  <span className="wt-step-title" style={{ fontWeight: active ? 600 : 400 }} title={it.title}>{it.short}</span>
+                </span>
+                <span className="wt-step-time">
+                  {it.time}
+                  {subs.length > 1 ? (
+                    <span style={{ display: "inline-flex", gap: 3 }}>
+                      {subs.map((sl, j) => (
+                        <span key={j} style={{
+                          width: 5, height: 5, borderRadius: 999,
+                          background: active && WT_SLIDES.indexOf(WT_SLIDES.filter(x => x.g === g)[j]) === slide ? it.color : "var(--border-2)",
+                        }}></span>
+                      ))}
+                    </span>
+                  ) : null}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* state toggle / context chip */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flex: "0 0 auto" }}>
+          {isActivity ? (
+            <div style={{ display: "flex", background: "var(--bg-3)", borderRadius: 999, padding: 3, cursor: "pointer" }} onClick={() => setFilled(!filled)}>
+              <span style={{ padding: "6px 15px", borderRadius: 999, fontSize: 11.5, fontWeight: 600, background: !filled ? "var(--k-dark-stone-90)" : "transparent", color: !filled ? "#fff" : "var(--fg-muted)" }}>Co-creation</span>
+              <span style={{ padding: "6px 15px", borderRadius: 999, fontSize: 11.5, fontWeight: 600, background: filled ? "var(--k-dark-stone-90)" : "transparent", color: filled ? "#fff" : "var(--fg-muted)" }}>Outcome</span>
+            </div>
+          ) : s.kind === "title" ? (
+            (() => {
+              const tm = (window.MOVE_TITLES || []).find((mm) => mm.g === s.g) || { color: "var(--k-warm-red-50)" };
+              return (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: tm.color, border: `1px solid ${tm.color}`, background: "rgba(255,255,255,0.02)", borderRadius: 999, padding: "6px 14px", whiteSpace: "nowrap" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 999, background: tm.color }}></span>
+                  Derisking the AI journey
+                </span>
+              );
+            })()
+          ) : s.g === 5 ? (
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--k-warm-red-50)", border: "1px solid rgba(255,70,45,0.4)", background: "rgba(255,70,45,0.06)", borderRadius: 999, padding: "6px 14px", whiteSpace: "nowrap" }}>
+              Envisioned target state · e2e ~few hours
+            </span>
+          ) : (
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--k-spruce-70)", border: "1px solid var(--k-ai-spruce-20)", background: "var(--k-ai-spruce-06)", borderRadius: 999, padding: "6px 14px", whiteSpace: "nowrap" }}>
+              Synthetic cohort · composites, not interviews
+            </span>
+          )}
+          <a href="AnaCredit Co-Creation Pack.html" style={{ fontSize: 11.5, fontWeight: 500, color: "var(--k-spruce-70)", textDecoration: "none", whiteSpace: "nowrap" }}>Canvas ↗</a>
+        </div>
+      </header>
+
+      {/* steps banner — the activity's 1·2·3 instruction sequence as pills */}
+      {isActivity ? (
+        <div style={{ flex: "0 0 auto", background: "var(--bg-1)", borderBottom: "1px solid var(--border-1)", display: "flex", alignItems: "center", gap: 18, padding: "9px 24px", minWidth: 0 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: ACTIVITIES[s.activity].color, whiteSpace: "nowrap", flex: "0 0 auto" }}>
+            {WT_GROUPS[s.g].n} · Steps
+          </span>
+          <ActivityStepPills activity={act} active={stepActive} done={stepsDone} />
+        </div>
+      ) : null}
+
+      {/* stage */}
+      <Stage w={s.w} h={s.h}>
+        {isActivity ? (
+          <ActivityFrame activity={act} filled={filled} onToggle={setFilled} chrome={false} stickies={false} live={true} probeStages={probeStages}>
+            {(f) => s.board(!f)}
+          </ActivityFrame>
+        ) : s.board(b)}
+      </Stage>
+
+      {/* arrows */}
+      <button className="wt-arrow wt-prev" onClick={prev} disabled={slide === 0 && b === 0} aria-label="Previous">←</button>
+      <button className="wt-arrow wt-next" onClick={next} disabled={slide === WT_SLIDES.length - 1 && b === nBeats - 1} aria-label="Next">→</button>
+
+      {/* footer */}
+      <footer style={{ flex: "0 0 auto", height: 54, background: "#fff", borderTop: "1px solid var(--border-1)", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 24px", gap: 16 }}>
+        <span style={{ fontSize: 12.5, color: "var(--fg-muted)", whiteSpace: "nowrap" }}>AnaCredit Workshop · BiL · Kyndryl Agentic Framework</span>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Walkthrough />);
+</script>
+</body>
+</html>

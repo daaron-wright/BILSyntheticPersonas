@@ -1,0 +1,7 @@
+node_modules/
+.env
+.DS_Store
+.claude/
+.design-canvas.state.json
+.image-slots.state.json
+.thumbnail

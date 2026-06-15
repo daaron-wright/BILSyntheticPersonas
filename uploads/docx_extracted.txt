@@ -1,0 +1,2158 @@
+
+
+    
+    
+    
+    
+    AnaCredit Igloo Workshop Amendment Pack
+
+    
+    Executive summary
+
+    The right amendment is to treat the Igloo as a high-context briefing and the workshop as an artifact-production day. AnaCredit itself is the ECB’s granular credit dataset for the euro area, governed by Regulation (EU) 2016/867; the ECB’s Manual and Q&As support interpretation but do not create additional legal obligations, while national implementation details are explicitly left to the relevant national central bank. For Luxembourg, that makes the Banque centrale du Luxembourg operationally authoritative for reporting dates, validation rules, comparison methodologies, and SDMX schemas. [1]
+
+    BiL’s own materials describe a current-state AnaCredit process that is manual, multi-system, and correction-heavy: source data arrives from T24, RFO Master, and branch or subsidiary inputs; staging and upload are manual; INVOKE and regulator feedback create rework loops; and downstream corrections are still handled case by case. The same materials position the target state as automated ingestion, deterministic controls in OPA/Policy-as-Code, AI-assisted remediation, human-in-the-loop approval, structured downstream feedback, and full evidence capture. The project brief frames the value hypothesis as a 50–70%+ reduction in monthly manual effort and cycle time, with better first-pass acceptance, lower defect leakage, and complete audit evidence by default. fileciteturn0file3 fileciteturn0file4 fileciteturn0file2
+
+    The main analytical implication is that engineering should not be asked to discover the operating model while it is also building the platform. The uploaded draft pack already identifies the highest-risk unknowns correctly: rule authority, data ownership, exception governance, observed-agent scope, reconciliation ownership, and evidence-pack design. Those are not “later hardening” items. They are the preconditions for a credible build plan. fileciteturn0file0
+
+    This amendment pack therefore converts the Igloo’s six closing lenses—Value, Data, Policy, Controls, People, Evidence—into six timed workshop activities with named outputs. It also adds the engineering handoff layer missing from many workshop decks: editable artifact templates, a reusable Policy-as-Code process schema, synthetic interview transcripts to accelerate prep, detailed as-is and to-be service blueprints, demo acceptance criteria, a Now/Next/Later backlog, and a ready-to-print collateral pack. The structure is intentionally aligned with the Igloo’s narrative arc and the BiL demo promise of one-click orchestration, OPA/PAC governance, and full chain of custody. fileciteturn0file1 fileciteturn0file2 fileciteturn0file4
+
+    The pack below is suitable for direct use by workshop leads, product owners, compliance leads, data stewards, and engineering teams.
+
+    
+[ROW] 
+[ROW] Package component
+ | Primary workshop output
+ | Primary downstream use
+ | 
+[ROW] Facilitator script
+ | Igloo exit capture + transition language
+ | Smooth handoff from immersion to working session
+ | 
+[ROW] Six lens templates
+ | One artifact per lens
+ | Clear workshop cadence and moderation guide
+ | 
+[ROW] Editable artifact tables
+ | Filled canvases and decisions
+ | Engineering requirements, governance inputs, design documentation
+ | 
+[ROW] PaC JSON schema
+ | Process catalog + control metadata
+ | Workflow implementation, Git versioning, API contracts
+ | 
+[ROW] Synthetic transcripts
+ | Role-based stimuli
+ | Persona refinement, interview prep, readout design
+ | 
+[ROW] Service blueprints
+ | As-is and to-be operating model
+ | Product scope, sequencing, integration design
+ | 
+[ROW] Demo contract
+ | Prioritized acceptance criteria
+ | Sprint planning and stakeholder sign-off
+ | 
+[ROW] Collateral pack
+ | Cards, canvases, worksheets
+ | Printing, Miro boards, facilitation logistics
+ | 
+    
+    
+    Regulatory frame and design principles
+
+    AnaCredit should be framed in the workshop as a regulated data operating model, not only a reporting obligation. Officially, AnaCredit is a harmonized euro-area dataset containing detailed information on individual bank loans across Member States. The ECB explains that the Regulation defines the reporting requirements and population; the Manual provides guidance; the Q&As complement the Manual; and the national implementation details, including timeliness and format, are determined by the relevant NCB. That hierarchy matters because it is the difference between a defensible control rule and a convenient but ungrounded automation. [2]
+
+    The official data model is also more structured than many workshop discussions assume. AnaCredit currently focuses on loans to corporations and other legal entities, mostly on a monthly basis. The Manual makes clear that natural persons are outside the standard reporting logic unless other debtors on the same instrument are not natural persons; it also shows the continuing importance of the €25,000 reporting threshold. Just as importantly for BiL, the Manual explains that a reporting agent can comprise multiple observed agents across countries and that the logical data model expands into six entity tables connected by keys and bridge tables. That gives the Data lens a precise workshop target: trace one exposure through instrument, counterparty, protection, and linkage entities, not through a generic “loan record.” [3]
+
+    The official data-quality architecture is three-layered. The ECB’s validation checks document groups the common deterministic checks around referential integrity, completeness, and consistency, and it notes that reporting agents are encouraged to strengthen their data quality management systems. The ECB also states that NCBs may perform additional validation checks beyond the common minimum standard. Separately, the ECB’s AnaCredit hub explains that plausibility checks aim to identify data that are likely to be incorrect and therefore require verification. For design purposes, that means the workshop should never collapse deterministic checks, plausibility review, and reconciliation into one undifferentiated “AI validation” bucket. [4]
+
+    Luxembourg implementation details are active enough that versioning must be treated as a day-one requirement. As of the current BCL instructions page, the stack includes reporting dates, reporting-agent lists, Member State lists, validation rules, comparison methodologies, and the SDMX technical stack. The same page shows v1.0.13 as mandatory from the January 2026 reference date through June 2026, and v1.0.14 as mandatory from the July 2026 reference date onward. BCL also distinguishes contact channels for credit data and referential data, which is a strong operational clue for exception taxonomy and ownership design. [5]
+
+    The BCL reconciliation process adds another workshop constraint. The BCL methodology for the AnaCredit/FINREP comparison says the ECB and NCBs introduced a quarterly comparison report to evaluate consistency and completeness; reporting agents in scope are expected to correct discrepancies; the feedback workbook includes an Overview sheet and can also include Included and Excluded instrument sheets; and revision deadlines are 20 working days for the first feedback and 5 days for later feedback, with email confirmation before resubmission. This means reconciliation and feedback handling cannot be an afterthought confined to a later phase. The workshop should prepare sample comparison artifacts and root-cause routing up front. [6]
+
+    The supervisory context also supports an evidence-first design. In February 2026, ECB Banking Supervision sanctioned J.P. Morgan SE €12.18 million for misreporting capital requirements, explicitly describing the breaches as serious negligence driven by deficiencies in internal processes and controls. That case was not about AnaCredit, but it is current, official evidence that weak reporting controls can become material supervisory events. For the broader “agentic bank” agenda, the EU Commission’s AI Act overview is also relevant: for high-risk AI systems, the Commission highlights obligations around logging, documentation, human oversight, robustness, cybersecurity, and accuracy. AnaCredit may not itself map neatly to an Annex III “high-risk” category in the way that credit scoring does, but those controls are a prudent baseline for a regulated agentic workflow. Finally, because approval logs, user actions, and decision histories can contain personal data, GDPR and EU data-protection governance remain applicable to the evidence layer. [7]
+
+    The timing frame below combines the current BiL materials with the BCL feedback cycle. The BiL timing values are design targets from the deck and brief, not achieved outcomes. fileciteturn0file3 fileciteturn0file4 [8]
+
+    
+[ROW] 
+
+ | 
+    The workshop should therefore be run against five design principles. Every automated rule must carry an authority label and version. Every material reported value must be traceable to a source field, mapper, and steward. Deterministic validation, plausibility review, and reconciliation must be modeled as separate control layers. Human approval and evidence capture must be explicit at each control gate. And schema/version changes must be treated as release management problems, not as documentation footnotes. [9]
+
+    
+    
+    Facilitation script and agenda amendment
+
+    The script below is designed to leave the Igloo with momentum but without repeating its content. It assumes the room has just experienced the eight-scene sequence from regulatory pressure through target state and the six closing lenses. The language deliberately bridges from immersion to artifact production, because the BiL materials already explain the story; the workshop’s job is to convert that story into buildable decisions. fileciteturn0file1 fileciteturn0file3 fileciteturn0file4
+
+    
+    Facilitator script
+
+    
+[ROW] 
+[ROW] Moment
+ | Suggested wording
+ | 
+[ROW] Igloo exit
+ | “You have just seen the pressure, the current loop, and the target operating model. Before we start solving, capture what felt riskiest, what felt slowest, and what you would need in order to trust a controlled one-click workflow.”
+ | 
+[ROW] Transition into Value
+ | “We begin with value because the bank is not funding a technology story; it is funding a measurable improvement in control, speed, and confidence.”
+ | 
+[ROW] Value into Data
+ | “Now that we have named the prize, we test whether it is achievable by following one exposure through the current chain. If we cannot trace one loan, we are not ready to automate the process.”
+ | 
+[ROW] Data into Policy
+ | “The data trace shows where facts change hands. The next question is which of those handoffs can be governed as explicit policy, and which still require interpretation.”
+ | 
+[ROW] Policy into Controls
+ | “A rule on paper is still not a control. We now decide where the system blocks, where it warns, where it suggests, and where a human must approve.”
+ | 
+[ROW] Controls into People
+ | “Controls only work when ownership is clear. We now assign who decides, who fixes, who approves, and who is informed under deadline pressure.”
+ | 
+[ROW] People into Evidence
+ | “Once decisions and owners are clear, the final design question is trust: what must the system remember so that audit, risk, and supervision can replay the run?”
+ | 
+[ROW] Evidence into demo close
+ | “We end by turning today’s decisions into a demo contract. The first build does not need to prove everything, but it does need to prove the right things.”
+ | 
+    
+    
+    Printable agenda amendment
+
+    This amendment keeps the Igloo intact and turns the rest of the day into a deliberate artifact sequence. The closing block is a demo contract and engineering handoff, not open-ended ideation. That is consistent with the one-slide demo promise of one-click orchestration, OPA/PAC robustness, and full chain of custody. fileciteturn0file1 fileciteturn0file2 fileciteturn0file0
+
+    
+[ROW] 
+[ROW] Time
+ | Module
+ | Purpose
+ | Primary output
+ | 
+[ROW] 09:00–09:20
+ | Igloo immersive briefing
+ | Establish shared context and pressure
+ | Shared mental model
+ | 
+[ROW] 09:20–09:30
+ | Exit capture
+ | Capture immediate reactions and trust thresholds
+ | Exit cards / pulse sheet
+ | 
+[ROW] 09:30–10:20
+ | Value
+ | Define measurable business case and sponsor decisions
+ | Value Scorecard
+ | 
+[ROW] 10:20–11:35
+ | Data
+ | Map breakpoints and follow one representative loan
+ | Breakpoint Map + One-Loan Trace
+ | 
+[ROW] 11:35–12:35
+ | Policy
+ | Convert rules into authority-tagged candidate controls
+ | Policy-as-Code Rule Catalogue
+ | 
+[ROW] 12:35–13:20
+ | Lunch
+ | Reset
+ | —
+ | 
+[ROW] 13:20–14:20
+ | Controls
+ | Define gates, exceptions, overrides, and approvals
+ | Control Gate Model
+ | 
+[ROW] 14:20–15:15
+ | People
+ | Assign decision rights, remediation ownership, and escalation
+ | Persona/RACI Map
+ | 
+[ROW] 15:15–16:10
+ | Evidence
+ | Design audit-ready chain of custody and retention logic
+ | Trust Record
+ | 
+[ROW] 16:10–17:00
+ | Demo contract and handoff
+ | Fix first-build proof points and dependencies
+ | Demo Contract + engineering handoff checklist
+ | 
+    
+    
+    
+    Lens activities and editable artifacts
+
+    The Igloo already ends on six lenses. The amendment is to make each lens resolve into a named artifact rather than a general conversation. That structure is also consistent with the uploaded draft package, which prioritizes executive framing, persona/RACI, observed-agent scope, journey and failure taxonomy, data inventory and lineage, rule authority, exception decisions, identifier policy, golden data, API/schema contracts, acceptance criteria, and governance checklists before engineering. fileciteturn0file1 fileciteturn0file0
+
+    
+    Value
+
+    This activity is anchored in the project brief’s value hypothesis and the Igloo’s “Regulatory Pressure” scene: cycle time, first-pass acceptance, defect leakage, automation coverage, and evidence completeness are the right scorecard dimensions for the first build. fileciteturn0file4 fileciteturn0file1
+
+    Timebox: 50–60 minutes
+
+    Purpose: Convert the business challenge into a measurable value case that can later become demo KPIs, steering metrics, and phase-exit criteria.
+
+    Prompts:
+“What must be materially better after the first release?”
+“What is the strongest value claim BiL can defend externally and internally?”
+“Which metrics are leading indicators versus lagging indicators?”
+
+    Facilitation steps: 1. Ask for two minutes of silent writing: each participant writes the three outcomes that would justify funding the build. 2. Consolidate proposed outcomes into one board and cluster them under speed, quality, control, and trust. 3. Walk the group through the Value Scorecard template and fill baseline confidence first: known, estimated, unknown. 4. Force target language into measurable terms. If the room says “better quality,” ask, “measured how?” 5. Mark three sponsor decisions that require leadership commitment rather than analysis. 6. Close by reading the scorecard aloud and asking for verbal confirmation from the executive sponsor and reporting lead.
+
+    Required materials: Value Scorecard canvas, printed current-state metrics if available, dot stickers, timer, decision log sheet.
+
+    Exact outputs: A filled Value Scorecard; a list of missing baselines to collect; three sponsor decisions requiring follow-up.
+
+    
+    
+    Data
+
+    This activity combines the current-state breakpoint map with the one-loan test. It is grounded in the BiL current process and in the official AnaCredit object model, which is built around instruments, counterparties, protections, and bridge entities rather than a single flat record. fileciteturn0file3 fileciteturn0file1 [10]
+
+    Timebox: 70–75 minutes
+
+    Purpose: Make the invisible current-state failure points tangible and prove whether the bank can trace one representative exposure through systems, transformations, validations, and owners.
+
+    Prompts:
+“Where does the current process lose time, context, or evidence?”
+“For one specific exposure, what data must be trusted before submission can ever be trusted?”
+“Which defects are source problems, which are mapping problems, and which are interpretation problems?”
+
+    Facilitation steps: 1. Place the current-state flow on the wall and ask participants to tag breakpoints using pre-printed failure cards. 2. Group the tags into five defect classes: source, reference, mapping, rule, and submission handling. 3. Select one representative exposure for the session; ideally use the same stylized loan shown in the Igloo. 4. Trace that exposure across instrument, counterparty, and protection data using the One-Loan Trace template. 5. For each critical element, record the source, transformation, current steward, and present evidence. 6. End by asking which fields cannot yet be automated safely because lineage or stewardship is still unclear.
+
+    Required materials: Breakpoint Map canvas, current-state process print, sample loan pack, One-Loan Trace template, system legend, sticky notes, pens.
+
+    Exact outputs: A filled Breakpoint Map; a One-Loan Trace; a prioritized list of lineage and stewardship gaps.
+
+    
+    
+    Policy
+
+    This activity exists because the official source hierarchy is layered: binding regulation, ECB guidance, national implementation, internal policy, and AI assistance are not the same thing. It also needs to respect the ECB distinction between deterministic validation and plausibility review, while treating OPA as the execution engine for the deterministic layer. [11]
+
+    Timebox: 60–70 minutes
+
+    Purpose: Turn policy ambiguity into a first-pass catalog of executable, reviewable, and escalation-only rules.
+
+    Prompts:
+“What is the authority for this rule?”
+“Is this rule deterministic, plausibility-based, reconciliation-based, or interpretive?”
+“What evidence would prove that the rule passed, failed, or was overridden?”
+
+    Facilitation steps: 1. Start with a two-minute refresher of the source hierarchy: Regulation, Manual/Q&A, BCL, internal policy, AI suggestion. 2. Capture candidate rules from the current pain points and existing validation logic. 3. Classify each rule into deterministic block, deterministic warning, plausibility indicator, reconciliation indicator, or human interpretation. 4. Require a source citation or source type for every rule. If the room cannot name it, mark the rule “authority unresolved.” 5. Record owner, approver, evidence object, and test-case needs. 6. Close by identifying which rules are safe to put into the first OPA release and which require a prior policy decision.
+
+    Required materials: Rule sorting canvas, printed source hierarchy card, Policy-as-Code Rule Catalogue template, markers, sample validation errors.
+
+    Exact outputs: A completed draft Rule Catalogue; an unresolved-interpretation list; a shortlist of first-release deterministic rules.
+
+    
+    
+    Controls
+
+    This activity is the operational translation of BiL’s target state. The target architecture and demo materials consistently show a human-in-the-loop workflow with OPA/PAC validation, one-click orchestration, and structured approval rather than autonomous black-box behavior. fileciteturn0file1 fileciteturn0file2 fileciteturn0file3 fileciteturn0file4
+
+    Timebox: 55–65 minutes
+
+    Purpose: Define the control gates that separate automated system action from accountable human decision.
+
+    Prompts:
+“What must be true before submission is even possible?”
+“What can the system do without approval, and what can it only recommend?”
+“What is the formal override path when a deadline and a control conflict?”
+
+    Facilitation steps: 1. Put the target-state flow on the wall and ask the room to mark every point where a decision changes the submission outcome. 2. Turn those moments into named gates: ingestion, schema validation, deterministic rule pass, exception review, attestation, submission. 3. For each gate, define entry conditions, blocking rules, approver, override path, SLA, and evidence captured. 4. Walk one failure scenario through the whole model to test whether ownership and timing are realistic. 5. Mark any gate that still depends on unwritten internal policy. 6. Close by naming the minimum control UI fields that must be visible in the demo.
+
+    Required materials: Control Gate Model canvas, target-state flow print, red/amber/green stickers, exception scenarios, timer.
+
+    Exact outputs: A completed Control Gate Model; an exception and override map; a control-UI must-show list.
+
+    
+    
+    People
+
+    This activity formalizes decision rights under regulatory time pressure. It should be grounded in the actual operating chain implied by BiL’s current flow, the observed-agent logic in the ECB Manual, and the practical split between credit-data and referential-data ownership visible in Luxembourg’s contact structure. fileciteturn0file3 [12]
+
+    Timebox: 45–55 minutes
+
+    Purpose: Replace diffuse accountability with explicit decision rights, remediation ownership, and escalation logic.
+
+    Prompts:
+“When the future system finds a problem, who decides, who fixes, who approves, and who is informed?”
+“Which conflicts must be escalated rather than solved peer-to-peer?”
+“What is each persona’s trust threshold for AI assistance?”
+
+    Facilitation steps: 1. Put the core personas on the wall and ask participants to add missing roles or committees. 2. Fill the Persona/RACI Map for the key decisions: rule interpretation, exception approval, source correction, submission approval, feedback closure. 3. Stress-test the matrix with two scenarios: a blocking deterministic failure and a high-value yellow reconciliation issue near deadline. 4. Record unresolved organizational questions as explicit governance actions, not side notes. 5. Ask each function to state the minimum evidence they would need to trust the system. 6. Close by identifying who must attend future sign-off sessions and who only needs readouts.
+
+    Required materials: Persona cards, RACI template, escalation matrix worksheet, markers, dot stickers.
+
+    Exact outputs: A filled Persona/RACI Map; a trust-threshold summary by role; a governance open-questions log.
+
+    
+    
+    Evidence
+
+    This activity makes auditability concrete. It synthesizes BiL’s own chain-of-custody promise with the wider control logic implied by the AI Act’s logging and human-oversight requirements and by GDPR/data-protection obligations around personal-data handling in logs and approval trails. fileciteturn0file2 fileciteturn0file4 [13]
+
+    Timebox: 50–60 minutes
+
+    Purpose: Specify the “trust record” the system must produce for reporting, audit, and supervision.
+
+    Prompts:
+“If a regulator, audit team, or executive asks why this submission was trusted, what must the system show immediately?”
+“What evidence can be captured automatically, and what still requires explicit attestation?”
+“What evidence is materially incomplete if policy version, schema version, or approval reason is missing?”
+
+    Facilitation steps: 1. List every event that changes trust status: data arrival, rule execution, suggestion, approval, override, submission, feedback intake. 2. For each event, define the mandatory fields, whether capture is automatic, whether personal data may be involved, and who may see it. 3. Build the Trust Record row by row until the full submission run can be replayed from it. 4. Use the resulting evidence model to draft the demo contract: what the first demo must visibly prove. 5. Mark retention and privacy questions for security/legal follow-up. 6. Close by reading back the minimum evidence pack that would satisfy reporting, audit, and engineering.
+
+    Required materials: Trust Record template, evidence card set, data-protection prompt sheet, Demo Contract template, timer.
+
+    Exact outputs: A completed Trust Record; a first-pass Demo Contract; a privacy/retention action list.
+
+    
+    
+    Editable artifact tables
+
+    The tables below are designed to be copied directly into PowerPoint, Excel, Word, Miro, FigJam, Notion, or the workshop pack. They match the six lenses and the expected engineering handoff set. The structure reflects the BiL materials and the uploaded draft package’s priority artifacts. fileciteturn0file0 fileciteturn0file4
+
+    
+    Value Scorecard
+
+    
+[ROW] 
+[ROW] Metric
+ | Current baseline
+ | Target
+ | Time horizon
+ | Evidence source
+ | Owner
+ | Decision if off-track
+ | 
+[ROW] Cycle time from data availability to submission
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] First-pass acceptance rate
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Defect leakage to regulator
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Manual touches / analyst hours
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Automation coverage
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Evidence completeness
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Reconciliation issue turnaround
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+    
+    
+    Breakpoint Map
+
+    
+[ROW] 
+[ROW] Process step
+ | Trigger / input
+ | Pain or failure mode
+ | Root-cause hypothesis
+ | Current owner
+ | Downstream impact
+ | Evidence today
+ | Priority
+ | 
+[ROW] Source extraction
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Consolidation / RFO handoff
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Staging / mapping
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Validation / INVOKE
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Submission / SOFIE
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Correction loop
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+    
+    
+    One-Loan Trace
+
+    
+[ROW] 
+[ROW] Business element
+ | AnaCredit entity / dataset
+ | Source system / field
+ | Transformation / mapping
+ | Rule / check
+ | Steward
+ | Evidence artifact
+ | Risk note
+ | 
+[ROW] Counterparty ID
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Legal form
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Sector
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Instrument type
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Interest rate
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Maturity
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Protection link
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Collateral value
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+    
+    
+    Policy-as-Code Rule Catalogue
+
+    
+[ROW] 
+[ROW] Rule ID
+ | Rule statement
+ | Authority level
+ | Source citation / source type
+ | Rule type
+ | Severity
+ | OPA executable
+ | Human review required
+ | Test cases
+ | Evidence fields
+ | 
+[ROW] 
+ | 
+ | 
+ | 
+ | Deterministic block / warning / plausibility / reconciliation / interpretive
+ | 
+ | Yes / No / Later
+ | 
+ | 
+ | 
+ | 
+[ROW] 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+    
+    
+    Control Gate Model
+
+    
+[ROW] 
+[ROW] Gate
+ | Entry condition
+ | Automated check
+ | Blocking
+ | Approver
+ | Override path
+ | SLA
+ | Evidence created
+ | UI component
+ | 
+[ROW] Data receipt
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Schema validation
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Deterministic rule pass
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Exception review
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Attestation
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Submission
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+    
+    
+    Persona/RACI Map
+
+    
+[ROW] 
+[ROW] Decision / action
+ | Executive sponsor
+ | Head of Regulatory Reporting
+ | AnaCredit Ops Lead
+ | CDO / Data steward
+ | CRO / Policy lead
+ | Lending Ops owner
+ | IT lead
+ | Internal Audit
+ | Supervisor liaison
+ | Product / Engineering owner
+ | 
+[ROW] Interpret rule change
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Approve deterministic override
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Approve submission readiness
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Own source correction
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Close recurring root cause
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+[ROW] Approve emergency hotfix
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+ | 
+    
+    
+    Trust Record
+
+    
+[ROW] 
+[ROW] Event / decision
+ | Mandatory fields
+ | Auto-captured
+ | Personal data risk
+ | Retention class
+ | Access roles
+ | Replay required
+ | Control if missing
+ | 
+[ROW] Source payload received
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+[ROW] Policy set executed
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+[ROW] AI suggestion generated
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+[ROW] Human decision made
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+[ROW] Override accepted
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+[ROW] Submission sent
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+[ROW] Feedback ingested
+ | 
+ | Yes / No
+ | Low / Medium / High
+ | 
+ | 
+ | Yes / No
+ | 
+ | 
+    
+    
+    Demo Contract
+
+    
+[ROW] 
+[ROW] Demo moment
+ | Must prove
+ | Required data
+ | Required rule / policy
+ | Visible evidence
+ | Acceptance test
+ | Priority
+ | Owner
+ | 
+[ROW] Ingest source payload
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Run deterministic validation
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Explain exception
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Suggest remediation
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Human approve / reject
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Produce evidence pack
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Submit / receipt
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+[ROW] Parse feedback
+ | 
+ | 
+ | 
+ | 
+ | 
+ | P0 / P1 / P2
+ | 
+ | 
+    
+    
+    
+    PaC business-process schema
+
+    Here, PaC is interpreted as Policy-as-Code using OPA because that is how the BiL demo materials define PAC, and OPA’s official documentation describes OPA as a general-purpose policy engine that offloads decision-making from software, evaluates structured input such as JSON, and decouples policy decision-making from enforcement. The schema below is designed to capture the reusable operating layer implied by the BiL target architecture: regulatory change intake, policy authoring, approval and publication, runtime execution, submission evidence, feedback tuning, and emergency hotfix governance. fileciteturn0file2 fileciteturn0file4 [14]
+
+    {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bil.example/schemas/pac-process-catalog.schema.json",
+  "title": "Policy-as-Code Process Catalog",
+  "type": "object",
+  "required": ["useCase", "sourceHierarchy", "controls", "processes"],
+  "properties": {
+    "useCase": {
+      "type": "object",
+      "required": ["name", "jurisdiction", "primaryDomains"],
+      "properties": {
+        "name": { "type": "string" },
+        "jurisdiction": { "type": "string" },
+        "primaryDomains": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "scopeNote": { "type": "string" }
+      }
+    },
+    "sourceHierarchy": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sourceTier" },
+      "minItems": 4
+    },
+    "controls": { "$ref": "#/$defs/controls" },
+    "processes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/process" },
+      "minItems": 6
+    },
+    "metrics": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/metric" }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "sourceTier": {
+      "type": "object",
+      "required": ["priority", "type", "authoritativeForRuntime"],
+      "properties": {
+        "priority": { "type": "integer", "minimum": 1 },
+        "type": {
+          "type": "string",
+          "enum": [
+            "binding_regulation",
+            "official_guidance",
+            "national_operating_instruction",
+            "internal_policy",
+            "ai_assist_or_heuristic"
+          ]
+        },
+        "description": { "type": "string" },
+        "authoritativeForRuntime": { "type": "boolean" }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "required": ["humanInLoop", "segregationOfDuties", "auditTrailFields"],
+      "properties": {
+        "humanInLoop": {
+          "type": "object",
+          "required": ["requiredFor"],
+          "properties": {
+            "requiredFor": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "autoRemediationPolicy": { "type": "string" }
+          }
+        },
+        "segregationOfDuties": {
+          "type": "object",
+          "required": ["rule"],
+          "properties": {
+            "rule": { "type": "string" },
+            "compensatingControl": { "type": "string" }
+          }
+        },
+        "auditTrailFields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 6
+        }
+      }
+    },
+    "process": {
+      "type": "object",
+      "required": ["id", "name", "objective", "actors", "triggers", "inputs", "outputs", "steps"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "objective": { "type": "string" },
+        "actors": { "type": "array", "items": { "type": "string" } },
+        "triggers": { "type": "array", "items": { "type": "string" } },
+        "inputs": { "type": "array", "items": { "type": "string" } },
+        "outputs": { "type": "array", "items": { "type": "string" } },
+        "slas": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "artifactBindings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "steps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/step" },
+          "minItems": 1
+        },
+        "kpis": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["sequence", "name", "actor", "mode", "decisionType", "inputs", "outputs"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string" },
+        "actor": { "type": "string" },
+        "mode": {
+          "type": "string",
+          "enum": ["automated", "human", "mixed"]
+        },
+        "decisionType": {
+          "type": "string",
+          "enum": ["deterministic", "plausibility", "reconciliation", "approval", "submission", "change_management"]
+        },
+        "inputs": { "type": "array", "items": { "type": "string" } },
+        "outputs": { "type": "array", "items": { "type": "string" } },
+        "successCriteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "exceptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "auditFields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "approvalRequired": { "type": "boolean" }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "required": ["name", "unit"],
+      "properties": {
+        "name": { "type": "string" },
+        "unit": { "type": "string" },
+        "baseline": {},
+        "target": {},
+        "owner": { "type": "string" }
+      }
+    }
+  }
+}
+
+    The example instance below is intentionally compact but directly usable as a seed process catalog for engineering. It mirrors the uploaded draft package’s proposed PaC operating model while simplifying it into an implementation-ready shape. fileciteturn0file0 fileciteturn0file4
+
+    {
+  "useCase": {
+    "name": "AnaCredit Policy-as-Code operating model",
+    "jurisdiction": "EU banking with Luxembourg national implementation",
+    "primaryDomains": [
+      "Deterministic AnaCredit validation",
+      "Plausibility and reconciliation governance",
+      "Submission evidence and attestation",
+      "Reusable policy lifecycle"
+    ],
+    "scopeNote": "Assumes no fixed data-access constraint for workshop design, but role-based entitlements still need approval."
+  },
+  "sourceHierarchy": [
+    {
+      "priority": 1,
+      "type": "binding_regulation",
+      "description": "ECB Regulation 2016/867 and mandatory local circulars / instructions",
+      "authoritativeForRuntime": true
+    },
+    {
+      "priority": 2,
+      "type": "official_guidance",
+      "description": "ECB Manual, Q&A, validation checks, plausibility checks, comparison methodologies",
+      "authoritativeForRuntime": true
+    },
+    {
+      "priority": 3,
+      "type": "national_operating_instruction",
+      "description": "BCL reporting dates, schema versions, validation rules, technical specifications",
+      "authoritativeForRuntime": true
+    },
+    {
+      "priority": 4,
+      "type": "internal_policy",
+      "description": "BiL SOPs, approval matrices, release and rollback standards",
+      "authoritativeForRuntime": true
+    },
+    {
+      "priority": 5,
+      "type": "ai_assist_or_heuristic",
+      "description": "LLM suggestions, clustering, remediation recommendations",
+      "authoritativeForRuntime": false
+    }
+  ],
+  "controls": {
+    "humanInLoop": {
+      "requiredFor": [
+        "new policy publication",
+        "ambiguous interpretation",
+        "material override",
+        "submission attestation",
+        "emergency hotfix"
+      ],
+      "autoRemediationPolicy": "Only pre-approved low-risk exception classes may auto-remediate."
+    },
+    "segregationOfDuties": {
+      "rule": "No one person authors, approves, publishes, and attests the same production policy change.",
+      "compensatingControl": "If team size forces overlap, require post-release review and explicit sponsor sign-off."
+    },
+    "auditTrailFields": [
+      "process_run_id",
+      "policy_id",
+      "policy_version",
+      "policy_hash",
+      "schema_version",
+      "data_snapshot_id",
+      "exception_id",
+      "decision",
+      "decision_reason",
+      "actor_id",
+      "timestamp_utc",
+      "submission_id"
+    ]
+  },
+  "processes": [
+    {
+      "id": "reg_change_intake",
+      "name": "Regulatory change intake and impact assessment",
+      "objective": "Turn ECB/BCL/internal changes into a classified delivery item with owner and SLA.",
+      "actors": ["Regulatory Policy Lead", "AnaCredit SME", "PaC Product Owner"],
+      "triggers": ["ECB update", "BCL update", "audit finding", "recurring defect"],
+      "inputs": ["source document", "current rule catalog", "schema calendar"],
+      "outputs": ["change record", "impact assessment", "owner assignment"],
+      "artifactBindings": ["Policy-as-Code Rule Catalogue", "Value Scorecard"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Register change",
+          "actor": "Regulatory Policy Lead",
+          "mode": "human",
+          "decisionType": "change_management",
+          "inputs": ["source document"],
+          "outputs": ["change record"],
+          "successCriteria": ["Authority level classified"],
+          "exceptions": ["Unknown source authority"],
+          "auditFields": ["change_record_id", "registered_by", "timestamp_utc"],
+          "approvalRequired": false
+        },
+        {
+          "sequence": 2,
+          "name": "Assess business and schema impact",
+          "actor": "AnaCredit SME",
+          "mode": "mixed",
+          "decisionType": "change_management",
+          "inputs": ["change record", "data inventory", "schema calendar"],
+          "outputs": ["impact rating", "affected datasets", "affected personas"],
+          "successCriteria": ["Named owner assigned"],
+          "exceptions": ["Unknown source owner"],
+          "auditFields": ["impact_rating", "owner_id", "timestamp_utc"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "policy_authoring_mapping",
+      "name": "Policy authoring and source mapping",
+      "objective": "Translate approved rule intent into human-readable policy, source mapping, and executable policy draft.",
+      "actors": ["AnaCredit SME", "Data Steward", "PaC Engineer", "Compliance Officer"],
+      "triggers": ["approved change record", "new recurring defect"],
+      "inputs": ["change record", "data inventory", "sample payloads"],
+      "outputs": ["policy spec", "mapping update", "rego draft", "evidence requirements"],
+      "artifactBindings": ["Policy-as-Code Rule Catalogue", "One-Loan Trace", "Trust Record"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Draft human-readable rule",
+          "actor": "AnaCredit SME",
+          "mode": "human",
+          "decisionType": "change_management",
+          "inputs": ["change record"],
+          "outputs": ["policy spec"],
+          "successCriteria": ["Source citation recorded"],
+          "exceptions": ["Ambiguous interpretation"],
+          "auditFields": ["policy_spec_version", "source_reference"],
+          "approvalRequired": true
+        },
+        {
+          "sequence": 2,
+          "name": "Map to sources and entities",
+          "actor": "Data Steward",
+          "mode": "human",
+          "decisionType": "change_management",
+          "inputs": ["policy spec", "data inventory"],
+          "outputs": ["mapped source fields", "affected entities"],
+          "successCriteria": ["Stable source field identified"],
+          "exceptions": ["No stable source", "bridge table gap"],
+          "auditFields": ["entity_list", "field_list"],
+          "approvalRequired": true
+        },
+        {
+          "sequence": 3,
+          "name": "Encode policy",
+          "actor": "PaC Engineer",
+          "mode": "human",
+          "decisionType": "deterministic",
+          "inputs": ["policy spec", "mapping update"],
+          "outputs": ["rego draft", "decision payload schema"],
+          "successCriteria": ["Reason code emitted"],
+          "exceptions": ["Too ambiguous for deterministic expression"],
+          "auditFields": ["git_commit_id", "policy_hash"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": ["reg_change_intake"]
+    },
+    {
+      "id": "policy_test_publish",
+      "name": "Policy test, approval, and publication",
+      "objective": "Test policy logic, explainability, performance, and rollback before production publication.",
+      "actors": ["QA Lead", "PaC Engineer", "Compliance Officer", "Release Manager"],
+      "triggers": ["rego draft ready", "scheduled release", "hotfix"],
+      "inputs": ["rego draft", "golden dataset", "edge cases", "approval matrix"],
+      "outputs": ["test pack", "approved policy version", "rollback package"],
+      "artifactBindings": ["Demo Contract", "Trust Record"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Run regression suite",
+          "actor": "QA Lead",
+          "mode": "automated",
+          "decisionType": "deterministic",
+          "inputs": ["rego draft", "golden dataset"],
+          "outputs": ["pass_fail_report"],
+          "successCriteria": ["All blocking tests pass"],
+          "exceptions": ["Non-reproducible results"],
+          "auditFields": ["test_suite_version", "dataset_version", "results_hash"],
+          "approvalRequired": false
+        },
+        {
+          "sequence": 2,
+          "name": "Approve and publish",
+          "actor": "Compliance Officer",
+          "mode": "human",
+          "decisionType": "approval",
+          "inputs": ["test pack", "policy spec", "rollback package"],
+          "outputs": ["published version"],
+          "successCriteria": ["Versioned policy and rollback stored"],
+          "exceptions": ["Approver disagreement"],
+          "auditFields": ["approver_id", "release_id", "policy_version"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": ["policy_authoring_mapping"]
+    },
+    {
+      "id": "runtime_execution_triage",
+      "name": "Runtime execution and exception triage",
+      "objective": "Ingest source payloads, run rule layers, route exceptions, and support human decision-making.",
+      "actors": ["Integration Platform", "OPA Runtime", "AnaCredit Analyst", "Source Owner"],
+      "triggers": ["scheduled cycle", "rerun request", "resubmission"],
+      "inputs": ["canonical payload", "policy set", "schema version", "lineage metadata"],
+      "outputs": ["validation results", "exception queue", "suggested actions", "approved corrections"],
+      "artifactBindings": ["Breakpoint Map", "Control Gate Model", "Trust Record"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Ingest and validate schema",
+          "actor": "Integration Platform",
+          "mode": "automated",
+          "decisionType": "deterministic",
+          "inputs": ["source payloads", "schema registry"],
+          "outputs": ["canonical payload", "snapshot id"],
+          "successCriteria": ["Supported schema accepted"],
+          "exceptions": ["Schema mismatch", "partial payload"],
+          "auditFields": ["snapshot_id", "schema_version", "source_system_ids"],
+          "approvalRequired": false
+        },
+        {
+          "sequence": 2,
+          "name": "Run deterministic and heuristic checks",
+          "actor": "OPA Runtime",
+          "mode": "mixed",
+          "decisionType": "deterministic",
+          "inputs": ["canonical payload", "policy set", "historical cases"],
+          "outputs": ["blocking failures", "warnings", "suggestions"],
+          "successCriteria": ["Reason codes and owners assigned"],
+          "exceptions": ["Unknown owner", "low-confidence suggestion"],
+          "auditFields": ["policy_set_version", "decision_count", "suggestion_id"],
+          "approvalRequired": false
+        },
+        {
+          "sequence": 3,
+          "name": "Human review",
+          "actor": "AnaCredit Analyst",
+          "mode": "human",
+          "decisionType": "approval",
+          "inputs": ["exception queue", "rule trace", "lineage card"],
+          "outputs": ["approved correction", "rejected correction", "escalation"],
+          "successCriteria": ["No unresolved blockers before submission"],
+          "exceptions": ["Approver unavailable", "business dispute"],
+          "auditFields": ["decision", "decision_reason", "approver_id"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": ["policy_test_publish"]
+    },
+    {
+      "id": "submission_evidence_attestation",
+      "name": "Submission, evidence pack, and attestation",
+      "objective": "Generate the regulator-facing file and bind it to exact data, policy, and approval evidence.",
+      "actors": ["Report Generation Service", "Reporting Lead", "Attestor"],
+      "triggers": ["no unresolved blockers", "management approval"],
+      "inputs": ["approved snapshot", "policy set", "schema version", "approved exception log"],
+      "outputs": ["submission file", "evidence pack", "attestation", "archive record"],
+      "artifactBindings": ["Trust Record", "Demo Contract"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Generate report and evidence",
+          "actor": "Report Generation Service",
+          "mode": "automated",
+          "decisionType": "submission",
+          "inputs": ["approved snapshot", "policy set"],
+          "outputs": ["submission file", "evidence pack"],
+          "successCriteria": ["Evidence complete"],
+          "exceptions": ["Missing policy version", "missing approval log"],
+          "auditFields": ["submission_hash", "evidence_pack_id"],
+          "approvalRequired": false
+        },
+        {
+          "sequence": 2,
+          "name": "Attest and submit",
+          "actor": "Reporting Lead",
+          "mode": "human",
+          "decisionType": "submission",
+          "inputs": ["submission file", "evidence pack"],
+          "outputs": ["attestation", "receipt"],
+          "successCriteria": ["Explicit attestation recorded"],
+          "exceptions": ["Attestor rejects readiness", "channel outage"],
+          "auditFields": ["attestor_id", "submission_receipt_id", "timestamp_utc"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": ["runtime_execution_triage"]
+    },
+    {
+      "id": "feedback_tuning",
+      "name": "Feedback ingestion, root cause, and control tuning",
+      "objective": "Convert regulator feedback and recon issues into structural fixes and safe policy improvements.",
+      "actors": ["AnaCredit Analyst", "Reconciliation Manager", "Source Owner", "PaC Product Owner"],
+      "triggers": ["feedback file", "reconciliation breach", "recurring defect"],
+      "inputs": ["feedback workbook", "run id", "policy history", "lineage metadata"],
+      "outputs": ["root cause record", "corrective action", "policy backlog item", "source fix request"],
+      "artifactBindings": ["Breakpoint Map", "Policy-as-Code Rule Catalogue", "Demo Contract"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Parse and classify feedback",
+          "actor": "AnaCredit Analyst",
+          "mode": "mixed",
+          "decisionType": "reconciliation",
+          "inputs": ["feedback workbook", "run id"],
+          "outputs": ["classified feedback items"],
+          "successCriteria": ["All items mapped to a defect class"],
+          "exceptions": ["Unsupported feedback format"],
+          "auditFields": ["feedback_item_id", "classification"],
+          "approvalRequired": false
+        },
+        {
+          "sequence": 2,
+          "name": "Create structural corrective action",
+          "actor": "PaC Product Owner",
+          "mode": "human",
+          "decisionType": "change_management",
+          "inputs": ["classified items", "root cause record"],
+          "outputs": ["corrective action", "owner", "target date"],
+          "successCriteria": ["Owner and due date assigned"],
+          "exceptions": ["No accountable owner"],
+          "auditFields": ["corrective_action_id", "owner_id", "target_date"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": ["submission_evidence_attestation"]
+    },
+    {
+      "id": "emergency_hotfix",
+      "name": "Emergency hotfix and reporting-freeze waiver",
+      "objective": "Allow urgent correction near cut-off without losing governance or rollback discipline.",
+      "actors": ["Reporting Lead", "Compliance Officer", "IT Release Manager", "Executive Sponsor"],
+      "triggers": ["submission blocker", "urgent schema change", "production defect"],
+      "inputs": ["issue record", "candidate hotfix", "risk assessment", "rollback plan"],
+      "outputs": ["waiver decision", "hotfix release", "post-incident review"],
+      "artifactBindings": ["Control Gate Model", "Trust Record"],
+      "steps": [
+        {
+          "sequence": 1,
+          "name": "Assess criteria and rollback",
+          "actor": "IT Release Manager",
+          "mode": "human",
+          "decisionType": "change_management",
+          "inputs": ["candidate hotfix", "rollback plan"],
+          "outputs": ["technical clearance"],
+          "successCriteria": ["Rollback path documented"],
+          "exceptions": ["No rollback available"],
+          "auditFields": ["technical_clearance_status", "rollback_reference"],
+          "approvalRequired": true
+        },
+        {
+          "sequence": 2,
+          "name": "Approve waiver and deploy",
+          "actor": "Compliance Officer",
+          "mode": "human",
+          "decisionType": "approval",
+          "inputs": ["technical clearance", "risk assessment"],
+          "outputs": ["waiver decision", "release record"],
+          "successCriteria": ["Named approval recorded"],
+          "exceptions": ["Approver disagreement"],
+          "auditFields": ["waiver_decision", "approver_ids", "release_id"],
+          "approvalRequired": true
+        }
+      ],
+      "dependencies": []
+    }
+  ],
+  "metrics": [
+    { "name": "Cycle time from data availability to submission", "unit": "hours", "owner": "Head of Regulatory Reporting" },
+    { "name": "First-pass acceptance", "unit": "%", "owner": "Head of Regulatory Reporting" },
+    { "name": "Defect leakage on deterministic rules", "unit": "count", "owner": "PaC Product Owner" },
+    { "name": "Evidence completeness", "unit": "%", "owner": "Internal Audit / Reporting Lead" }
+  ],
+  "openQuestions": [
+    "Exact BiL committee and approval structure",
+    "Exact auto-remediation classes allowed",
+    "Retention periods and archive location",
+    "Final role-based entitlements by persona",
+    "Production submission connector details"
+  ]
+}
+
+    
+    
+    
+    Synthetic interview transcripts
+
+    The transcripts below are deliberately synthetic. They are not records of actual BiL interviews. They are workshop-ready composites grounded in the BiL current-state and target-state materials, the official ECB/BCL control structure, and the role and ownership tensions that those sources imply. Their purpose is to help workshop leads prepare, seed role-play, test assumptions, and accelerate live interview planning. fileciteturn0file0 fileciteturn0file3 [15]
+
+    
+    Head of Regulatory Reporting
+
+    Q: What turns the monthly run into an executive issue rather than an operations issue?
+A: The report is the visible end of the chain. By the time the bank is discussing corrections, the reporting team owns the deadline, even if the cause sits upstream. That is when an operational defect becomes a governance problem.
+
+    Q: What is the hardest thing to explain to senior management today?
+A: That a single rejection code can hide three different causes: bad source data, bad mapping, or a policy interpretation problem. From the outside, they all look like “reporting got it wrong.”
+
+    Q: What would a genuinely useful control screen show you?
+A: I need the failed rule, its severity, the source lineage, the current owner, the previous treatment, and the approval status. If I still need three calls to understand a red item, the UI has not solved the problem.
+
+    Q: What evidence do you need before approving submission?
+A: I need to know which blockers were resolved, which warnings remain, who approved the exceptions, what rule set ran, and whether the file is reproducible from the captured snapshot.
+
+    Q: What is your trust threshold for AI assistance?
+A: AI can recommend and summarize. It can help me see patterns and propose options. It cannot silently alter a reportable value without an explicit human decision and a traceable reason.
+
+    Q: What would make you call the first release successful?
+A: Fewer late escalations, fewer regulator returns, faster triage, and a clean evidence pack every cycle. Efficiency is welcome, but defensibility is the real signal.
+
+    
+    
+    AnaCredit Ops Lead
+
+    Q: What work feels most repetitive in the current cycle?
+A: Reconstructing context. The same types of failures come back, but the surrounding evidence is always scattered across files, emails, and memory.
+
+    Q: Which defect type is worst operationally?
+A: The ones that look small but require detective work, especially identifier or classification issues. They are rarely a single-cell fix because they expose a broken relationship.
+
+    Q: What would save you the most time immediately?
+A: Better triage. If the system already knew the likely owner, the rule severity, the historical pattern, and the suggested remediation path, my time would shift from hunting to deciding.
+
+    Q: What needs to remain human today?
+A: Anything that changes interpretation, anything that changes more than one record in a structurally important way, and anything that might create a mismatch with other reporting frameworks.
+
+    Q: What evidence matters most to operations?
+A: Before-and-after values, the reason for the change, and whether the same problem was seen last month. Without that, root-cause work keeps resetting.
+
+    Q: When would you trust an automated workflow?
+A: When the system is boring in the right way. It should catch routine issues consistently, route them clearly, and let me override only with a named reason.
+
+    
+    
+    Chief Data Officer
+
+    Q: Where does the data problem really sit?
+A: In ownership gaps. The bank often has data, but not a stable steward for the meaning of the data once it crosses systems and transformations.
+
+    Q: What concerns you most about the current model?
+A: Shared fields with no true owner. Those are the fields that look governed until an exception appears, then everyone discovers the stewardship boundary was implicit.
+
+    Q: Why is the one-loan trace so useful?
+A: Because it forces specificity. It prevents vague statements like “the source is T24” and turns them into actual field-level accountability.
+
+    Q: What would you want from the workshop output?
+A: A critical-data inventory for AnaCredit, mapped to stewards, transformations, and evidence sources. I would also want a clear distinction between source-of-truth values and policy-derived values.
+
+    Q: What trust threshold do you apply to AI recommendations?
+A: They are useful when they improve diagnosis. They are risky when they blur the difference between observed data and inferred classification.
+
+    Q: What tells you the future design is mature enough for engineering?
+A: When every critical attribute has a source, a steward, a transformation owner, and a rule path. Without that, engineering is being asked to encode ambiguity.
+
+    
+    
+    Chief Risk Officer
+
+    Q: Why does this matter from a risk perspective?
+A: Because weak reporting controls contaminate the risk narrative. If the bank cannot explain the data pipeline behind a regulatory number, confidence in the control environment falls quickly.
+
+    Q: What is the biggest risk in an “agentic” framing?
+A: Confusing acceleration with delegation of accountability. The bank can accelerate decisions, but it cannot outsource accountability to a model.
+
+    Q: Which decisions should stay human-approved?
+A: Material overrides, interpretive classifications, acceptance of unresolved warnings, and any decision that changes the bank’s risk story across frameworks.
+
+    Q: What evidence do you need as CRO?
+A: I need to see severity, impact, owner, mitigation, and rationale. For anything material, I also need to see whether similar issues have recurred.
+
+    Q: What would increase your confidence in the platform?
+A: Hard separation between deterministic rules and probabilistic suggestions. If those lines blur, challenge becomes very difficult.
+
+    Q: What would make the first release unacceptable?
+A: A workflow that is faster but less legible. Speed without auditability is not a win in a regulated control process.
+
+    
+    
+    Lending Ops Owner
+
+    Q: How do AnaCredit issues usually reach your team today?
+A: Late and compressed. We get asked for an explanation when the central process is already under time pressure, which means sensible source fixes are suddenly treated like urgent exceptions.
+
+    Q: What do reporting teams often misunderstand about source systems?
+A: A regulatory field can look simple at reporting level but still be product-dependent or over-loaded operationally. The source system was not always built around the regulator’s logic.
+
+    Q: What do you need from the future process?
+A: Early visibility and structured requests. If I can see the rule, the specific field, the affected population, and the downstream consequence, I can respond much faster.
+
+    Q: What should never happen automatically?
+A: Any change that effectively rewrites business meaning in the source without domain review. Suggested fixes are fine; silent upstream mutation is not.
+
+    Q: What evidence matters to your team?
+A: The exact source field, the current population count, and whether the issue is recurring. Otherwise it is hard to justify source-system prioritization.
+
+    Q: When would you trust the new system?
+A: When it helps us fix problems at the right layer instead of turning every issue into a reporting-only workaround.
+
+    
+    
+    Internal Audit Lead
+
+    Q: What is your first question when reviewing a new control workflow?
+A: Can I replay it? If the answer is no, I already know the process is relying on memory or informal evidence somewhere.
+
+    Q: What typically goes wrong in evidence packs?
+A: They prove the final number but not the control story. You can see what was reported, but not which rule was applied, who overrode what, or which version was in force.
+
+    Q: What would you expect from the future Trust Record?
+A: Snapshot ID, policy version, rule results, approval logs, override reasons, submission artifact, and feedback linkage back to the run.
+
+    Q: What do you care about in the human-in-the-loop design?
+A: Segregation of duties and clarity of authority. If the same person can author, approve, and attest without a compensating control, the workflow is fragile.
+
+    Q: How do you view AI-generated suggestions?
+A: As advisory content that requires strong provenance. If the recommendation is visible but supported by nothing, it adds narrative, not assurance.
+
+    Q: What would make the project audit-ready?
+A: Not perfection. Reproducibility, completeness of evidence, stable access control, and a clear answer to why the system made the decision it made.
+
+    
+    
+    Supervisor Liaison
+
+    Q: What does the external conversation feel like when the bank receives a correction request?
+A: It becomes a credibility test immediately. The issue is rarely only the value; it is whether the bank can respond clearly and consistently.
+
+    Q: What information do you most want available when talking to the regulator?
+A: The rule context, the affected scope, whether it is deterministic or interpretive, the remediation path, and the expected timing for correction.
+
+    Q: What weakens confidence most quickly?
+A: Different teams telling different versions of the same story. That usually means the evidence is fragmented or the ownership model is not settled.
+
+    Q: What would a better response pack contain?
+A: A concise issue summary, run identifier, source lineage, corrective action, named approver, and whether the issue indicates a one-off defect or a structural weakness.
+
+    Q: How should the system treat regulator feedback?
+A: As structured input, not just an email prompt. The item should be classified, routed, linked to the run, and converted into either a source fix, a policy backlog item, or a governance action.
+
+    Q: What would increase trust in the demo?
+A: If it can show the full response chain from feedback receipt to root cause to approved correction without any manual reconstruction.
+
+    
+    
+    Executive Sponsor
+
+    Q: Why sponsor this now?
+A: Because AnaCredit is a practical place to prove whether the bank can modernize a regulated workflow safely. It is specific enough to build, but important enough to matter.
+
+    Q: What do you need from the workshop?
+A: Not inspiration alone. I need a problem statement, metrics, decision rights, build priorities, and clarity on what the first release will actually prove.
+
+    Q: What is unacceptable in the first build?
+A: A visually impressive demo that still depends on unresolved authority, unclear owners, or hidden manual work.
+
+    Q: What evidence would justify continued funding?
+A: Measurable reduction in manual effort and cycle time, better first-pass quality, and visible improvement in control evidence.
+
+    Q: What is your trust threshold for automated decisioning?
+A: The system can automate prepared control work. It cannot obscure accountability or remove the need for explicit approval in material cases.
+
+    Q: Why is this more than one use case?
+A: Because the reusable asset is the governed operating pattern: policy, agents, approval, evidence, and replay. AnaCredit is only the lighthouse.
+
+    
+    
+    IT Integration Lead
+
+    Q: Where is the biggest technical risk?
+A: In hidden checkpoints. Manual uploads and handoffs are doing control work today, but that work is undocumented. Once we automate them, we have to replace the control deliberately.
+
+    Q: What do discovery workshops often miss?
+A: Versioning. Schema versioning, rule versioning, payload versioning, and release timing. Those details determine whether a workflow is stable or brittle.
+
+    Q: What do you need before substantial build starts?
+A: Contracted source payloads, a golden dataset, exception taxonomy, rule catalog, and a clear approval model. Otherwise engineering is building around assumptions.
+
+    Q: What must the runtime support from day one?
+A: Replay, rollback, observability, and a run ID that ties together payload, rule set, decisions, and evidence.
+
+    Q: How do you see AI suggestions technically?
+A: As an advisory service behind a controlled interface. They should never be confused with the authoritative policy result.
+
+    Q: What would convince you the workflow is production-grade?
+A: If I can inspect a run end to end, reproduce the decision path, and reverse a release safely when a local instruction or schema changes.
+
+    
+    
+    Product and Engineering Owner
+
+    Q: What is your biggest scope risk?
+A: Trying to build the full target architecture before the rule authority and artifact contracts are stable. That usually creates attractive demos and weak production foundations.
+
+    Q: How would you structure the first release?
+A: Deterministic validation first, visible lineage, human review, and evidence capture. Reconciliation and learning should follow behind that, not in front of it.
+
+    Q: What do you need from the workshop that is most often missing?
+A: Acceptance criteria stated in business language but testable in engineering language. The Demo Contract should be clear enough to drive backlog slicing.
+
+    Q: What should be in the definition of done?
+A: Built, tested, logged, explainable, approved, and replayable. In this use case, “works on sample data” is not enough.
+
+    Q: How should unresolved questions be handled?
+A: Logged publicly with owner, impact, and due date. Hidden ambiguity is the fastest way to slow delivery later.
+
+    Q: What tells you the workshop succeeded?
+A: When engineering can start with no guesswork about source hierarchy, data contracts, approval boundaries, or evidence requirements.
+
+    
+    
+    
+    Service blueprints and engineering handoff
+
+    The blueprints below are derived from the BiL current-state and target-state decks, the Igloo narrative, and the official ECB/BCL operating context. The as-is model treats the reporting team as the integrator of last resort; the to-be model redistributes work into a governed workflow with explicit rule layers, ownership, and evidence. fileciteturn0file3 fileciteturn0file1 fileciteturn0file4 [16]
+
+    
+    As-is service blueprint
+
+    The current-state blueprint reflects the BiL process of source extraction, RFO consolidation, staging, INVOKE validation, manual upload, SOFIE submission, regulator feedback, and case-by-case downstream fixes. The durations shown below are design descriptions from the BiL materials, not measured time studies. fileciteturn0file3 fileciteturn0file1
+
+    
+[ROW] 
+[ROW] Swimlane
+ | Source preparation
+ | Consolidation
+ | Staging and mapping
+ | Validation and upload
+ | Submission and feedback
+ | Remediation
+ | 
+[ROW] People
+ | Source owners prepare extracts
+ | AnaCredit team consolidates inputs
+ | Analysts apply rules and mapping logic
+ | Analysts run INVOKE and manual upload
+ | Reporting lead reviews and submits
+ | Analysts chase owners and document changes
+ | 
+[ROW] Systems
+ | T24, branch / subsidiary files, RFO Master
+ | RFO Master, spreadsheets, local extracts
+ | Staging area, mapping sheets
+ | INVOKE, upload tool, manual packaging
+ | SOFIE / regulator interface, email / workbook feedback
+ | Source-system tickets, email threads, spreadsheets
+ | 
+[ROW] Policies
+ | ECB regulation interpreted through Manual/Q&A
+ | Local practice and mapping conventions
+ | BCL schema / format and internal rules
+ | Validation outputs plus analyst judgment
+ | Submission deadlines and feedback handling
+ | Case-by-case remediation norms
+ | 
+[ROW] Artifacts
+ | Raw extracts, local files
+ | Consolidated dataset, mapping references
+ | Staged data, manual adjustments
+ | Validation results, upload file
+ | Submission package, feedback workbook
+ | Email trail, corrected extracts, resubmission file
+ | 
+[ROW] Time
+ | Hours to days depending on sources
+ | Variable wait time
+ | Rules and mappings described as ~30 minutes in deck
+ | Upload minutes; review ~1 hour
+ | Correction loop ~1 week
+ | New cycle or partial rerun
+ | 
+[ROW] Typical failure modes
+ | Missing or late files
+ | Inconsistent reference values
+ | Unclear mapping logic
+ | Late discovery of validation failures
+ | Corrections requested after submission
+ | Unclear owner, evidence gaps, repeated fixes
+ | 
+    The as-is flow visually compresses the problem in a way that can be reused directly in facilitation. fileciteturn0file3
+
+    
+[ROW] 
+
+ | 
+    
+    
+    To-be service blueprint
+
+    The target-state blueprint combines BiL’s future-state ambition with the official separation of deterministic validation, plausibility review, and local comparison logic. It is intentionally human-in-the-loop: the system orchestrates and evidences, but material interpretation, attestation, and emergency override remain governed human acts. fileciteturn0file1 fileciteturn0file2 fileciteturn0file4 [17]
+
+    
+[ROW] 
+[ROW] Swimlane
+ | Contracted ingestion
+ | Deterministic validation
+ | Plausibility and reconciliation
+ | Human review and approval
+ | Submission and evidence
+ | Feedback tuning
+ | 
+[ROW] People
+ | Source owners provide governed payloads
+ | Analysts monitor automated checks
+ | Analysts and recon leads review indicators
+ | Reporting lead / approver decides
+ | Attestor signs off
+ | Analysts, source owners, product owner close structural issues
+ | 
+[ROW] Systems
+ | Source APIs / batch feeds, orchestrator
+ | OPA + schema registry + validation agents
+ | Plausibility service, FINREP / BCL recon agents
+ | Control UI, case queue, lineage cards
+ | SDMX report writer, submission connector, evidence service
+ | Feedback parser, backlog manager, issue tracker
+ | 
+[ROW] Policies
+ | Source contracts, versioned schemas
+ | Deterministic rule catalog in PaC
+ | Thresholds, tolerances, recon methodology
+ | Approval matrix, override policy
+ | Attestation statement, retention rules
+ | Root-cause standards, change-management policy
+ | 
+[ROW] Artifacts
+ | Canonical payload, snapshot ID
+ | Rule results, exception queue, reason codes
+ | Recon workbook, ranked issues, suggested actions
+ | Approval log, override note, escalation record
+ | Submission file, evidence pack, receipt, archive record
+ | Corrective action, source fix request, policy backlog item
+ | 
+[ROW] Time
+ | Initial validation within hours of data availability
+ | Blocking results same run
+ | Same-day triage for critical items
+ | Decision within working session / SLA
+ | Submission within same cycle window
+ | Root cause within agreed post-cycle SLA
+ | 
+[ROW] Typical failure modes
+ | Unsupported schema, missing payload
+ | Blocking deterministic failure
+ | High-risk warning with no clear owner
+ | Approver unavailable or disputed decision
+ | Channel outage or incomplete evidence
+ | Repeated issues not translated into structural change
+ | 
+    The to-be flow should be used both as workshop wall content and as an engineering storyboard. fileciteturn0file1 fileciteturn0file4
+
+    
+[ROW] 
+
+ | 
+    
+    
+    Entity-relationship sketch for data lineage
+
+    This ER sketch uses the ECB Manual’s six-table logical model as the core and extends it with the control objects the BiL target architecture requires: policy versions, validation results, human decisions, and evidence packs. That makes it a useful bridge between regulation, service design, and engineering storage design. [18] fileciteturn0file4
+
+    
+[ROW] 
+
+ | 
+    
+    
+    Prioritized demo acceptance criteria
+
+    The acceptance criteria below are prioritized against BiL’s stated proof points: reduced manual processing toward one-click orchestration, OPA/PAC validation robustness, and full chain of custody. They also reflect the project brief’s phase logic of validation first, then reconciliation and learning. fileciteturn0file2 fileciteturn0file4
+
+    
+[ROW] 
+[ROW] Priority
+ | Demo acceptance criterion
+ | Why it matters
+ | 
+[ROW] P0
+ | The demo shows contractual ingestion of a sample source payload and displays schema version used for the run
+ | Proves the platform is version-aware before any policy logic executes
+ | 
+[ROW] P0
+ | Deterministic rules run in OPA before submission and emit rule IDs, severity, and reason codes
+ | Proves Policy-as-Code is authoritative for the blocking layer
+ | 
+[ROW] P0
+ | Each blocking exception shows source lineage, current owner, and suggested next action
+ | Proves triage is operational, not merely technical
+ | 
+[ROW] P0
+ | A human can approve, reject, or edit a suggested correction, with reasoning captured
+ | Proves human-in-the-loop governance
+ | 
+[ROW] P0
+ | Submission is blocked if unresolved blocking issues remain
+ | Proves control works under pressure
+ | 
+[ROW] P0
+ | The system generates an evidence pack containing snapshot ID, policy version, approvals, and submission receipt
+ | Proves chain of custody
+ | 
+[ROW] P0
+ | A run can be replayed using run ID, payload snapshot, and policy version
+ | Proves auditability and engineering reproducibility
+ | 
+[ROW] P1
+ | The demo parses a regulator/BCL-style feedback workbook and maps items back to run artifacts
+ | Proves closed-loop remediation capability
+ | 
+[ROW] P1
+ | Recon items can be separated from deterministic validation failures and routed differently
+ | Proves the rule layers are modeled correctly
+ | 
+[ROW] P1
+ | Structured feedback can be generated for source owners rather than only for reporting analysts
+ | Proves root-cause orientation
+ | 
+[ROW] P2
+ | The system can propose policy-draft changes or remediation suggestions from recurring feedback, but only as governed recommendations
+ | Proves learning is controlled rather than ad hoc
+ | 
+[ROW] P2
+ | Pre-approved low-risk exception classes can be auto-remediated with full evidence
+ | Proves scalable automation beyond the first release
+ | 
+    
+    
+    Now, Next, Later backlog themes
+
+    The sequencing below follows the project brief’s incremental delivery model and the uploaded draft package’s emphasis on baseline artifacts, golden data, contracts, policy authority, and governance before broader intelligence features. fileciteturn0file0 fileciteturn0file4
+
+    
+[ROW] 
+[ROW] Horizon
+ | Backlog themes
+ | Primary outputs
+ | 
+[ROW] Now
+ | Source contracts; golden dataset; One-Loan Trace; rule authority and Rule Catalogue; OPA deterministic validation; exception queue; approval logging; evidence-pack foundation; schema/version governance; role-based access baseline
+ | Stable first build scope
+ | 
+[ROW] Next
+ | Plausibility indicators; FINREP/BCL reconciliation; feedback parser; downstream structured remediation; richer lineage views; replay and rollback hardening; dashboarding
+ | Expanded control coverage
+ | 
+[ROW] Later
+ | Controlled self-learning loop; policy ingestion pipeline; wider reporting-domain reuse; selective auto-remediation for approved classes; enterprise control plane for reusable agentic flows
+ | Reusable agentic-bank operating layer
+ | 
+    
+    
+    One-page handoff checklist for engineers
+
+    
+[ROW] 
+[ROW] Handoff item
+ | Done when
+ | Owner
+ | 
+[ROW] Problem statement and value scorecard signed
+ | Executive sponsor and reporting lead agree on goals and thresholds
+ | PM / sponsor
+ | 
+[ROW] Observed-agent and scope matrix confirmed
+ | No entity or branch sits “implicitly in scope”
+ | Reporting lead / data governance
+ | 
+[ROW] Golden dataset available
+ | Sample happy path, edge cases, and known-bad cases exist
+ | Reporting analysts / engineering
+ | 
+[ROW] Canonical source payload contract agreed
+ | Fields, types, keys, and schema versioning are explicit
+ | IT lead / source owners
+ | 
+[ROW] Rule Catalogue source-backed
+ | Every proposed rule has authority level, owner, and evidence fields
+ | Compliance / AnaCredit SME
+ | 
+[ROW] Control Gate Model approved
+ | Blocking, warnings, overrides, and approvers are explicit
+ | Reporting lead / risk / compliance
+ | 
+[ROW] Trust Record approved
+ | Mandatory audit and evidence fields are agreed
+ | Audit / security / reporting
+ | 
+[ROW] Role-based access baseline defined
+ | Access groups for reporting, source owners, approvers, audit are named
+ | Security / product
+ | 
+[ROW] Demo Contract frozen for first increment
+ | P0 scope is testable and accepted
+ | Product owner
+ | 
+[ROW] Regression and replay test plan seeded
+ | Deterministic test pack exists and replay requirement is captured
+ | QA / engineering
+ | 
+[ROW] Rollback and emergency waiver path drafted
+ | Hotfix pathway exists before production cutover
+ | IT lead / compliance
+ | 
+[ROW] Open questions log assigned
+ | Every unresolved item has owner and due date
+ | PM
+ | 
+    
+    
+    Recommended collateral pack
+
+    The most effective collateral pack is not large; it is specific. The combination below is enough to run the day in a room or inside a hybrid Miro workflow. Where live data is unavailable, use a golden dataset and a BCL-style feedback example with Overview, Included, and Excluded sheets. fileciteturn0file0 [19]
+
+    
+[ROW] 
+[ROW] Item
+ | Format
+ | Quantity
+ | Used in
+ | 
+[ROW] Igloo exit cards
+ | A6 or digital form
+ | 1 per participant
+ | Exit capture
+ | 
+[ROW] One-page agenda amendment
+ | A4
+ | 1 per participant
+ | Day navigation
+ | 
+[ROW] Value Scorecard canvas
+ | A1 / Miro frame
+ | 1
+ | Value
+ | 
+[ROW] Breakpoint Map wall
+ | A0 / Miro frame
+ | 1
+ | Data
+ | 
+[ROW] One-Loan Trace worksheet
+ | A3
+ | 1 per group
+ | Data
+ | 
+[ROW] Rule authority cards
+ | A5
+ | 1 set
+ | Policy
+ | 
+[ROW] Policy-as-Code Rule Catalogue sheet
+ | A1 / spreadsheet
+ | 1
+ | Policy
+ | 
+[ROW] Control Gate Model canvas
+ | A1
+ | 1
+ | Controls
+ | 
+[ROW] Persona cards
+ | A5
+ | 1 set
+ | People
+ | 
+[ROW] Persona/RACI wall
+ | A1
+ | 1
+ | People
+ | 
+[ROW] Trust Record worksheet
+ | A1
+ | 1
+ | Evidence
+ | 
+[ROW] Demo Contract board
+ | A1
+ | 1
+ | Close
+ | 
+[ROW] Open questions / governance log
+ | A3
+ | 1
+ | Whole day
+ | 
+[ROW] Dot stickers and severity stickers
+ | Physical or digital
+ | 1 set
+ | Prioritization and risk marking
+ | 
+    Used together, these artifacts change the workshop from a thematic discussion into a concrete pre-engineering operating-model intervention. That is the right amendment for an Igloo-led AnaCredit day: highly explanatory at the front, highly operational by the end, and explicit about what engineering receives next. fileciteturn0file1 fileciteturn0file4
+
+    
+    
+    
+    
+    
+
+    
+    [1] [2] [3] [9] [11] https://www.ecb.europa.eu/stats/ecb_statistics/anacredit/html/index.en.html
+
+    https://www.ecb.europa.eu/stats/ecb_statistics/anacredit/html/index.en.html
+
+    [4] [15] [16] [17] https://www.ecb.europa.eu/pub/pdf/other/ecb.anacreditvalidationchecks012024~4c50cc43ec.en.pdf
+
+    https://www.ecb.europa.eu/pub/pdf/other/ecb.anacreditvalidationchecks012024~4c50cc43ec.en.pdf
+
+    [5] https://www.bcl.lu/en/Regulatory-reporting/Etablissements_credit/AnaCredit/Instructions/index.html
+
+    https://www.bcl.lu/en/Regulatory-reporting/Etablissements_credit/AnaCredit/Instructions/index.html
+
+    [6] [8] [19] https://www.bcl.lu/en/Regulatory-reporting/Etablissements_credit/AnaCredit/Instructions/AnaCredit_methodology_comparison_report_FINREP_2023_12_EN.pdf
+
+    https://www.bcl.lu/en/Regulatory-reporting/Etablissements_credit/AnaCredit/Instructions/AnaCredit_methodology_comparison_report_FINREP_2023_12_EN.pdf
+
+    [7] https://www.bankingsupervision.europa.eu/press/pr/date/2026/html/ssm.pr260219~93d5b6f73e.en.html
+
+    https://www.bankingsupervision.europa.eu/press/pr/date/2026/html/ssm.pr260219~93d5b6f73e.en.html
+
+    [10] [12] [18] https://www.ecb.europa.eu/pub/pdf/other/AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf
+
+    https://www.ecb.europa.eu/pub/pdf/other/AnaCredit_Manual_Part_I_General_Methodology_201905~e4b471a87e.en.pdf
+
+    [13] https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+
+    https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+
+    [14] https://www.openpolicyagent.org/docs/latest/
+
+    https://www.openpolicyagent.org/docs/latest/
+
+    
+    
+      
+        
+                
+        
+        
+              
+      
+    
+  
+

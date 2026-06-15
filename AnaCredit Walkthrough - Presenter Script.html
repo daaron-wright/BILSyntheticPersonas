@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AnaCredit Walkthrough — Presenter Script</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<style>
+  :root { --move-neutral: var(--k-dark-stone-90); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--k-cool-gray-10); }
+  body { font-family: var(--font-sans); color: var(--fg-2); line-height: 1.5; }
+
+  .page { max-width: 880px; margin: 0 auto; padding: 56px 40px 80px; }
+
+  /* ---------- cover ---------- */
+  .cover { background: var(--k-dark-stone-90); color: #fff; border-radius: 16px; padding: 40px 44px 36px; position: relative; overflow: hidden; }
+  .cover .rule { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #5BA2AE, #29707A, #3E8AC2, #8A4FBF, #E68A00, #FF462D); }
+  .cover .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--k-warm-red-40); }
+  .cover h1 { font-family: var(--font-display); font-weight: 500; font-size: 38px; line-height: 1.08; letter-spacing: -0.02em; color: #fff; margin: 12px 0 0; }
+  .cover .sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 10px; font-family: var(--font-mono); letter-spacing: 0.02em; }
+  .thesis { margin-top: 22px; display: flex; gap: 14px; align-items: flex-start; }
+  .thesis .bar { width: 3px; align-self: stretch; background: var(--k-warm-red-50); border-radius: 2px; flex: 0 0 auto; }
+  .thesis p { margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 20px; line-height: 1.4; color: rgba(255,255,255,0.92); text-wrap: pretty; }
+
+  .goals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 26px; }
+  .goal { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px 16px; }
+  .goal .gt { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--k-spruce-30); }
+  .goal .gd { font-size: 12.5px; color: rgba(255,255,255,0.82); margin-top: 5px; line-height: 1.4; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 22px; font-size: 12px; color: var(--fg-muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend .k { font-family: var(--font-mono); font-weight: 600; color: var(--fg-1); }
+
+  /* ---------- move section headers ---------- */
+  .move-head { display: flex; align-items: baseline; gap: 16px; margin: 44px 0 4px; padding-bottom: 10px; border-bottom: 2px solid var(--border-1); }
+  .move-head .num { font-family: var(--font-display); font-weight: 300; font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
+  .move-head .mt { font-family: var(--font-display); font-weight: 500; font-size: 22px; color: var(--fg-1); letter-spacing: -0.01em; }
+  .move-head .time { margin-left: auto; font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-muted); }
+
+  /* ---------- slide blocks ---------- */
+  .slide { background: #fff; border: 1px solid var(--border-1); border-left: 4px solid var(--move); border-radius: 10px; padding: 18px 22px 20px; margin-top: 16px; }
+  .slide .sh { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .slide .sn { font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; color: var(--move); background: var(--move-tint); border: 1px solid var(--move-tint-b); border-radius: 999px; padding: 3px 11px; white-space: nowrap; }
+  .slide .st { font-family: var(--font-display); font-weight: 500; font-size: 18px; color: var(--fg-1); }
+  .slide .stype { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-subtle); margin-left: auto; white-space: nowrap; }
+
+  ul.pts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  ul.pts li { position: relative; padding-left: 20px; font-size: 14.5px; color: var(--fg-2); line-height: 1.5; text-wrap: pretty; }
+  ul.pts li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 6px; height: 6px; border-radius: 999px; background: var(--move); }
+  ul.pts li strong { color: var(--fg-1); font-weight: 600; }
+  ul.pts li.ip { padding-left: 20px; }
+  ul.pts li.ip::before { border-radius: 1px; background: var(--k-spruce-60); }
+  .iptag { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--k-spruce-70); background: var(--k-ai-spruce-12); border-radius: 3px; padding: 1px 6px; margin-right: 7px; vertical-align: 1.5px; }
+
+  .land { margin-top: 14px; display: flex; gap: 11px; align-items: flex-start; background: var(--move-tint); border-radius: 8px; padding: 11px 14px; }
+  .land .star { color: var(--move); font-size: 15px; line-height: 1.4; flex: 0 0 auto; }
+  .land .lt { font-family: var(--font-display); font-weight: 500; font-size: 15.5px; color: var(--fg-1); line-height: 1.4; text-wrap: pretty; }
+  .land .lt .lab { display: block; font-family: var(--font-sans); font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 3px; }
+
+  .do { margin-top: 10px; font-size: 12.5px; color: var(--fg-muted); display: flex; align-items: center; gap: 8px; }
+  .do .pill { font-family: var(--font-mono); font-size: 10px; color: var(--k-warm-red-50); border: 1px solid rgba(255,70,45,0.4); border-radius: 999px; padding: 2px 9px; }
+
+  /* ---------- close ---------- */
+  .close { background: var(--k-dark-stone-90); color: #fff; border-radius: 14px; padding: 30px 34px; margin-top: 44px; }
+  .close .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--k-warm-red-40); }
+  .close h2 { font-family: var(--font-display); font-weight: 500; font-size: 24px; color: #fff; margin: 8px 0 14px; letter-spacing: -0.01em; }
+  .close ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .close li { position: relative; padding-left: 20px; font-size: 14.5px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+  .close li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 6px; height: 6px; border-radius: 999px; background: var(--k-warm-red-50); }
+  .close .cta { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.14); font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 19px; color: #fff; line-height: 1.4; }
+
+  .footer-note { text-align: center; font-size: 11.5px; color: var(--fg-subtle); margin-top: 30px; }
+
+  @media print {
+    html, body { background: #fff; }
+    .page { max-width: none; padding: 0; }
+    .cover { border-radius: 0; }
+    .slide, .close, .cover { break-inside: avoid; }
+    .move-head { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <header class="cover">
+    <div class="rule"></div>
+    <div class="eyebrow">Presenter script · BiL × Kyndryl Vital</div>
+    <h1>AnaCredit co-creation walkthrough</h1>
+    <div class="sub">Executive / steering audience · ~22 min · 14 slides · 6 moves</div>
+
+    <div class="thesis">
+      <span class="bar"></span>
+      <p>“We don't ask you to trust AI on faith. We co-create it, interrogate every output with the people accountable for it, and freeze only what survives.”</p>
+    </div>
+
+    <div class="goals">
+      <div class="goal">
+        <div class="gt">Goal · Inspire</div>
+        <div class="gd">A regulated bank can modernise a critical workflow safely. AnaCredit is the lighthouse — the reusable asset is the governed operating pattern.</div>
+      </div>
+      <div class="goal">
+        <div class="gt">Goal · Kyndryl IP</div>
+        <div class="gd">Synthetic personas, the co-creation method, the Agentic Framework — Policy-as-Code, human-in-the-loop gates, the Trust Record — and the Demo Contract.</div>
+      </div>
+      <div class="goal">
+        <div class="gt">Goal · Derisk the journey</div>
+        <div class="gd">Every move retires a named risk. Nothing is automated that can't be owned, challenged, and replayed.</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><span class="k">★</span> the one line to land</span>
+      <span><span class="k iptag" style="margin:0">IP</span> Kyndryl IP to name out loud</span>
+      <span><span class="k pill" style="font-size:10px;color:var(--k-warm-red-40);border-color:rgba(255,70,45,0.35);border-radius:999px;border-style:solid;border-width:1px;padding:2px 9px;display:inline-block">live</span> do this on screen</span>
+    </div>
+  </header>
+
+  <!-- OPEN -->
+  <div class="move-head"><span class="num" style="color:var(--k-dark-stone-90)">—</span><span class="mt">Open</span><span class="time">~2 min</span></div>
+
+  <div class="slide" style="--move:var(--k-dark-stone-90); --move-tint:var(--k-cool-gray-10); --move-tint-b:var(--border-1)">
+    <div class="sh"><span class="sn">Slide 01</span><span class="st">The day at a glance</span><span class="stype">Opener</span></div>
+    <ul class="pts">
+      <li>Open with the real problem: <strong>every bank wants to “do AI” — the ones who succeed don't start with the model, they start with trust.</strong></li>
+      <li>This is <strong>one working day, six moves</strong>. It ends with a signed, buildable scope — not a slide and not a maybe.</li>
+      <li>The method itself is the value: every decision is <strong>co-created with the room, interrogated live, then validated and frozen</strong>.</li>
+      <li><span class="iptag">IP</span>This three-step rhythm — co-create → interrogate → validate — is the Kyndryl co-creation method. Point to it on the dark bar.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“By five o'clock we don't walk out with enthusiasm — we walk out with a contract.”</span></div>
+  </div>
+
+  <!-- MOVE 00 -->
+  <div class="move-head"><span class="num" style="color:#5BA2AE">00</span><span class="mt">The cohort</span><span class="time">~3 min</span></div>
+
+  <div class="slide" style="--move:#5BA2AE; --move-tint:rgba(91,162,174,0.10); --move-tint-b:rgba(91,162,174,0.3)">
+    <div class="sh"><span class="sn">Slide 02</span><span class="st">Title — The cohort</span><span class="stype">Divider</span></div>
+    <ul class="pts">
+      <li>Most workshops design for stakeholders who aren't in the room. <strong>That's exactly where AI programs quietly fail.</strong></li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“Before the room even meets, we model who it has to answer to.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#5BA2AE; --move-tint:rgba(91,162,174,0.10); --move-tint-b:rgba(91,162,174,0.3)">
+    <div class="sh"><span class="sn">Slide 03</span><span class="st">The cohort wall</span><span class="stype">Interactive</span></div>
+    <ul class="pts">
+      <li class="ip"><span class="iptag">IP</span><strong>Ten synthetic personas — AI composites built from real interview transcripts.</strong> Not avatars; grounded challengers with goals, frustrations, and an AI-trust threshold.</li>
+      <li>Three are live today: <strong>the Sponsor</strong> who funds it, <strong>the Reporting lead</strong> who owns the deadline, <strong>the Risk officer</strong> who has to defend it.</li>
+      <li>The other seven stay on the wall as context — all ten shaped the pre-work; three are open to interrogate live.</li>
+      <li><span class="pill">live</span> Click one persona and read their pushback aloud — it lands harder than describing it.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“You're about to meet the people who could kill this project — before we've built a thing.”</span></div>
+    <div class="do"><span class="pill">live</span> Talk to Henri (Sponsor) → Claire (Reporting) → Marc (Risk).</div>
+  </div>
+
+  <!-- MOVE 01 -->
+  <div class="move-head"><span class="num" style="color:#29707A">01</span><span class="mt">Frame the value</span><span class="time">~2.5 min</span></div>
+
+  <div class="slide" style="--move:#29707A; --move-tint:var(--k-ai-spruce-06); --move-tint-b:var(--k-ai-spruce-20)">
+    <div class="sh"><span class="sn">Slide 04</span><span class="st">Title — Frame the value</span><span class="stype">Divider</span></div>
+    <ul class="pts">
+      <li>The derisking principle for this move, said plainly.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“We fund numbers with owners and dates — not a story.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#29707A; --move-tint:var(--k-ai-spruce-06); --move-tint-b:var(--k-ai-spruce-20)">
+    <div class="sh"><span class="sn">Slide 05</span><span class="st">Frame the value · scorecard</span><span class="stype">Activity</span></div>
+    <ul class="pts">
+      <li>The room fills a value scorecard live. The <strong>AI Sponsor and Reporting lead interrogate every metric</strong> — “would this justify continued funding at steering?”</li>
+      <li>Only measurable targets <strong>with a named owner</strong> survive. “Better quality” is not allowed to mean nothing.</li>
+      <li><strong>Risk retired:</strong> funding a program with no baseline — so you could never prove the AI changed anything.</li>
+      <li><span class="pill">live</span> Toggle Co-creation → Outcome to show the blank board becoming the validated scorecard.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“If you can't measure it, you can't defend it — so we don't fund it.”</span></div>
+  </div>
+
+  <!-- MOVE 02 -->
+  <div class="move-head"><span class="num" style="color:#3E8AC2">02</span><span class="mt">Trace one loan</span><span class="time">~2.5 min</span></div>
+
+  <div class="slide" style="--move:#3E8AC2; --move-tint:rgba(62,138,194,0.08); --move-tint-b:rgba(62,138,194,0.28)">
+    <div class="sh"><span class="sn">Slide 06</span><span class="st">Title — Trace one loan</span><span class="stype">Divider</span></div>
+    <ul class="pts">
+      <li>The principle that protects the foundation under every agent.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“We automate nothing whose meaning has no owner.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#3E8AC2; --move-tint:rgba(62,138,194,0.08); --move-tint-b:rgba(62,138,194,0.28)">
+    <div class="sh"><span class="sn">Slide 07</span><span class="st">Trace one loan · field by field</span><span class="stype">Activity</span></div>
+    <ul class="pts">
+      <li>One <strong>real exposure</strong>, walked field by field. The AI Risk officer asks of every field: <strong>“who's accountable for its meaning after the handoff?”</strong></li>
+      <li>Any field without a steward is <strong>flagged un-automatable</strong>. Full stop.</li>
+      <li class="ip"><span class="iptag">IP</span>This is lineage and stewardship made <strong>executable</strong> — the data foundation the Agentic Framework stands on.</li>
+      <li><strong>Risk retired:</strong> automating an ownership gap — meaning drifts the instant the first exception lands.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“Automation doesn't fix an ownership gap — it accelerates it. So we close it first.”</span></div>
+  </div>
+
+  <!-- MOVE 03 -->
+  <div class="move-head"><span class="num" style="color:#8A4FBF">03</span><span class="mt">Sort what rules apply</span><span class="time">~2.5 min</span></div>
+
+  <div class="slide" style="--move:#8A4FBF; --move-tint:rgba(138,79,191,0.08); --move-tint-b:rgba(138,79,191,0.28)">
+    <div class="sh"><span class="sn">Slide 08</span><span class="st">Title — Sort what rules apply</span><span class="stype">Divider</span></div>
+    <ul class="pts">
+      <li>The line that keeps AI's judgment and the bank's law apart.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“We keep the deterministic and the probabilistic visibly apart.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#8A4FBF; --move-tint:rgba(138,79,191,0.08); --move-tint-b:rgba(138,79,191,0.28)">
+    <div class="sh"><span class="sn">Slide 09</span><span class="st">Sort the rules · authority ladder</span><span class="stype">Activity</span></div>
+    <ul class="pts">
+      <li>Rules written as <strong>testable statements</strong>. The AI Risk officer asks: “is anything here a suggestion pretending to be a rule?”</li>
+      <li>Only deterministic, source-backed, testable rules reach the shortlist the agents will run.</li>
+      <li class="ip"><span class="iptag">IP</span><strong>Policy-as-Code</strong> — the agent's rulebook is generated, versioned, and challengeable. It is never a black box.</li>
+      <li><strong>Risk retired:</strong> a model suggestion wearing the costume of a hard rule — once they blur, challenge is impossible.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“A control you can't challenge isn't a control. AI's judgment and the bank's law stay in separate lanes.”</span></div>
+  </div>
+
+  <!-- MOVE 04 -->
+  <div class="move-head"><span class="num" style="color:#E68A00">04</span><span class="mt">Draw the gates</span><span class="time">~2.5 min</span></div>
+
+  <div class="slide" style="--move:#E68A00; --move-tint:rgba(230,138,0,0.08); --move-tint-b:rgba(230,138,0,0.28)">
+    <div class="sh"><span class="sn">Slide 10</span><span class="st">Title — Draw the gates</span><span class="stype">Divider</span></div>
+    <ul class="pts">
+      <li>The principle that makes speed safe.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“Every gate names a human and leaves a record you can replay.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#E68A00; --move-tint:rgba(230,138,0,0.08); --move-tint-b:rgba(230,138,0,0.28)">
+    <div class="sh"><span class="sn">Slide 11</span><span class="st">Draw the gates · stress-played</span><span class="stype">Activity</span></div>
+    <ul class="pts">
+      <li>Six control gates, <strong>stress-played against a live failure at the deadline</strong>. The Reporting lead: “at T-36h, who do I actually call?”</li>
+      <li class="ip"><span class="iptag">IP</span>The <strong>Trust Record</strong> — every gate writes replayable evidence, and there's a <strong>human in the loop at every step the agent will later run</strong>.</li>
+      <li><strong>Risk retired:</strong> a faster process you still can't audit — speed bought at the cost of defensibility.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“Faster is only a win if you can still prove what happened. Here, you can replay it.”</span></div>
+  </div>
+
+  <!-- MOVE 05 -->
+  <div class="move-head"><span class="num" style="color:#FF462D">05</span><span class="mt">Envisioned target state</span><span class="time">~4 min</span></div>
+
+  <div class="slide" style="--move:#FF462D; --move-tint:var(--k-ai-warm-red-06); --move-tint-b:var(--k-ai-warm-red-20)">
+    <div class="sh"><span class="sn">Slide 12</span><span class="st">Title — Envisioned target state</span><span class="stype">Divider</span></div>
+    <ul class="pts">
+      <li>The turn: everything so far was the room earning the right to see the AI run.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“Only now do we show the AI running it — bounded by everything the room just froze.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#FF462D; --move-tint:var(--k-ai-warm-red-06); --move-tint-b:var(--k-ai-warm-red-20)">
+    <div class="sh"><span class="sn">Slide 13</span><span class="st">Target state · the agentic process</span><span class="stype">Payoff</span></div>
+    <ul class="pts">
+      <li>The payoff in one number: a manual relay that takes <strong>1–2 weeks becomes an agentic process in hours</strong>.</li>
+      <li>Point at the orange node — <strong>the Agentic AI is boxed in</strong> by the policy plane, the human plane, and the evidence plane the room just built.</li>
+      <li class="ip"><span class="iptag">IP</span><strong>Kyndryl Agentic Framework:</strong> ingestion automated, deterministic checks enforced by Policy-as-Code, AI suggests fixes <em>with provenance</em>, humans decide, structured feedback closes the loop to the source.</li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“The AI is fast <em>because</em> everything around it is governed — not in spite of it.”</span></div>
+  </div>
+
+  <div class="slide" style="--move:#FF462D; --move-tint:var(--k-ai-warm-red-06); --move-tint-b:var(--k-ai-warm-red-20)">
+    <div class="sh"><span class="sn">Slide 14</span><span class="st">The Demo Contract</span><span class="stype">Close of day</span></div>
+    <ul class="pts">
+      <li>This is what the bank walks out with: a <strong>Demo Contract</strong>. The core agentic loop — <strong>validate → AI suggests → human approves → evidence</strong> — each moment owned, tested, and tied to the wireframe that proves it.</li>
+      <li class="ip"><span class="iptag">IP</span>We turn a day of decisions into a <strong>buildable, signed scope</strong> — the reusable governed pattern, well beyond AnaCredit.</li>
+      <li><span class="pill">live</span> Toggle Before → After: workshop close becomes the build hand-off. <strong>Sprint 1 can start Monday.</strong></li>
+    </ul>
+    <div class="land"><span class="star">★</span><span class="lt"><span class="lab">Land this</span>“AnaCredit is the lighthouse. The reusable asset is the operating pattern you just watched us build.”</span></div>
+  </div>
+
+  <!-- CLOSE -->
+  <div class="close">
+    <div class="eyebrow">Close · ~2 min</div>
+    <h2>The move to AI without betting the bank</h2>
+    <ul>
+      <li>Recap the rhythm they just watched: <strong>co-create → interrogate → validate → freeze.</strong> Six moves, each retiring a named risk.</li>
+      <li>Inspire: this is how you modernise a regulated workflow safely — and <strong>the pattern reuses across every controlled process you own.</strong></li>
+      <li>Kyndryl's IP did the work in the open: synthetic stakeholders, Policy-as-Code, human-in-the-loop gates, the Trust Record, the Demo Contract.</li>
+    </ul>
+    <div class="cta">“Give us one process and one day. You'll leave with a scope you can build — and defend.”</div>
+  </div>
+
+  <div class="footer-note">Presenter script · AnaCredit co-creation walkthrough · BiL × Kyndryl Vital · Kyndryl Agentic Framework</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,716 @@
+/* =============================================================
+   Kyndryl CMDB Design System — Tokens
+   -------------------------------------------------------------
+   Foundations extracted from Kyndryl Shidoka (Bridge) DS:
+   - @kyndryl-design-system/shidoka-foundation  → palette, type, space
+   - @kyndryl-design-system/shidoka-icons       → iconography
+   Primary brand accent is Warm Red 50; Spruce is the working UI
+   hue (CTAs, links, selected states). Token names mirror Shidoka
+   ($k-color-*, $k-text-*, $k-background-*) so Shidoka-native
+   teams can map 1:1.
+   ============================================================= */
+
+/* Brand typefaces —
+   TWK Everett  = display, headlines 20px+ (Kyndryl corporate sans)
+   Roboto       = body 14–18px, dense UI, tables
+   Geist Mono   = code, monospace slots (IDs, CIs, JSON)
+   Arabic stack keeps Noto Kufi/Naskh per Shidoka RTL guidance. */
+@font-face { font-family: "TWK Everett"; font-weight: 200; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Ultralight.otf") format("opentype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 300; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Light-web.ttf") format("truetype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Regular-web.ttf") format("truetype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 400; font-style: italic; font-display: swap; src: url("fonts/TWKEverett-RegularItalic.otf") format("opentype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Medium-web.ttf") format("truetype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 500; font-style: italic; font-display: swap; src: url("fonts/TWKEverett-MediumItalic.otf") format("opentype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Bold-web.ttf") format("truetype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 700; font-style: italic; font-display: swap; src: url("fonts/TWKEverett-BoldItalic.otf") format("opentype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 800; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Extrabold.otf") format("opentype"); }
+@font-face { font-family: "TWK Everett"; font-weight: 900; font-style: normal; font-display: swap; src: url("fonts/TWKEverett-Black.otf") format("opentype"); }
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Geist+Mono:wght@400;500;600&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
+
+:root {
+  /* -------------------------------------------------------------
+     Shidoka brand palette — Warm Red (brand accent) + Spruce (UI)
+     Source: @kyndryl-design-system/shidoka-foundation color tokens.
+     The brand moment is Warm Red 50 (--k-warm-red-50). Spruce is
+     the interactive workhorse — primary buttons, links, focus.
+     ------------------------------------------------------------- */
+
+  /* Warm Red ramp — BRAND accent */
+  --k-warm-red-10:   #FFE8E0;
+  --k-warm-red-20:   #FFB8A3;
+  --k-warm-red-30:   #FF8766;
+  --k-warm-red-40:   #FF6647;
+  --k-warm-red-50:   #FF462D;   /* brand */
+  --k-warm-red-60:   #E63A22;
+  --k-warm-red-70:   #B82915;
+  --k-warm-red-80:   #8A1E0D;
+  --k-warm-red-90:   #5C1408;
+  --k-warm-red-100:  #2E0A04;
+  --k-warm-red-110:  #1A0602;
+
+  /* Spruce ramp — UI workhorse (links, CTAs, selected) */
+  --k-spruce-10:   #E8F2F4;
+  --k-spruce-20:   #BEDDE2;
+  --k-spruce-30:   #91C4CC;
+  --k-spruce-40:   #5BA2AE;
+  --k-spruce-50:   #3D8590;
+  --k-spruce-60:   #29707A;   /* default interactive */
+  --k-spruce-70:   #1F5A63;
+  --k-spruce-80:   #17444B;
+  --k-spruce-90:   #0F2E33;
+  --k-spruce-100:  #07191C;
+
+  /* Kyndryl blue — reserved for data-viz / secondary brand use. */
+  --k-blue-40:  #5BA2D6;
+  --k-blue-50:  #3E8AC2;
+  --k-blue-60:  #2C6FA0;
+  --k-blue-70:  #1F5580;
+
+  /* Back-compat aliases used by older preview markup */
+  --kyn-primary:     var(--k-spruce-60);
+  --kyn-primary-600: var(--k-spruce-70);
+  --kyn-primary-400: var(--k-spruce-40);
+  --kyn-secondary:   var(--k-spruce-30);
+  --kyn-accent:      var(--k-warm-red-50);
+
+  /* -------------------------------------------------------------
+     Data-viz categorical — Shidoka chart slots (order locked)
+     ------------------------------------------------------------- */
+  --chart-primary:     var(--k-spruce-60);
+  --chart-secondary:   var(--k-warm-red-50);
+  --chart-category-1:  #29707A;  /* spruce-60 */
+  --chart-category-2:  #FF462D;  /* warm-red-50 */
+  --chart-category-3:  #3E8AC2;  /* blue-50 */
+  --chart-category-4:  #8A4FBF;  /* violet */
+  --chart-category-5:  #E68A00;  /* amber */
+  --chart-category-6:  #5C6A73;  /* cool-gray */
+  --chart-category-7:  #5BA2AE;  /* spruce-40 */
+  --chart-category-8:  #FF8766;  /* warm-red-30 */
+  --chart-category-9:  #1F5580;  /* blue-70 */
+  --chart-category-10: #B82915;  /* warm-red-70 */
+
+  --chart-axis-text:  #5C6A73;
+  --chart-label-text: #3D4852;
+  --chart-title-text: #1A1F24;
+
+  /* -------------------------------------------------------------
+     Neutrals — Shidoka runs THREE gray ramps. We consume all three
+     with a single consistent alias, and keep legacy --slate-*
+     names as back-compat so existing preview markup keeps working.
+     - Dark Stone  = workhorse UI gray (text, borders, surfaces)
+     - Warm Gray   = warm-leaning for brand/marketing surfaces
+     - Cool Gray   = cool-leaning for data / dashboard chrome
+     ------------------------------------------------------------- */
+
+  /* Dark Stone — default UI neutral */
+  --k-dark-stone-10:   #F5F5F5;
+  --k-dark-stone-20:   #E6E6E6;
+  --k-dark-stone-30:   #CFCFCF;
+  --k-dark-stone-40:   #A8A8A8;
+  --k-dark-stone-50:   #808080;
+  --k-dark-stone-60:   #5C5C5C;
+  --k-dark-stone-70:   #3D3D3D;
+  --k-dark-stone-80:   #242424;
+  --k-dark-stone-90:   #141414;
+  --k-dark-stone-100:  #000000;
+
+  /* Cool Gray — dashboards, charts, secondary chrome */
+  --k-cool-gray-10:   #F2F4F5;
+  --k-cool-gray-20:   #E1E5E8;
+  --k-cool-gray-30:   #C1C8CD;
+  --k-cool-gray-40:   #98A3AB;
+  --k-cool-gray-50:   #6B7780;
+  --k-cool-gray-60:   #4F5A63;
+  --k-cool-gray-70:   #3A434B;
+  --k-cool-gray-80:   #252B31;
+  --k-cool-gray-90:   #161A1E;
+
+  /* Warm Gray — reserved for marketing/brand surfaces */
+  --k-warm-gray-10:   #F5F3F0;
+  --k-warm-gray-20:   #E7E3DD;
+  --k-warm-gray-30:   #CFC8BD;
+  --k-warm-gray-50:   #857E73;
+  --k-warm-gray-70:   #40382D;
+
+  /* Legacy slate-* aliases (used throughout existing UI kit) */
+  --slate-50:  var(--k-cool-gray-10);
+  --slate-100: var(--k-cool-gray-20);
+  --slate-200: #D6DBDF;
+  --slate-300: var(--k-cool-gray-30);
+  --slate-400: var(--k-cool-gray-40);
+  --slate-500: var(--k-cool-gray-50);
+  --slate-600: var(--k-cool-gray-60);
+  --slate-700: var(--k-cool-gray-70);
+  --slate-800: var(--k-cool-gray-80);
+  --slate-900: var(--k-cool-gray-90);
+
+  /* -------------------------------------------------------------
+     Semantic surface tokens (shadcn mirror, flat hex for preview)
+     HSL equivalents at the end of this block for Tailwind parity.
+     ------------------------------------------------------------- */
+  --background:           #FFFFFF;
+  --foreground:           #141414;
+  --card:                 #FFFFFF;
+  --card-foreground:      #141414;
+  --popover:              #FFFFFF;
+  --popover-foreground:   #141414;
+  --primary:              var(--k-spruce-60);      /* interactive — Shidoka primary */
+  --primary-foreground:   #FFFFFF;
+  --secondary:            var(--k-dark-stone-10);
+  --secondary-foreground: #171717;
+  --muted:                var(--k-dark-stone-10);
+  --muted-foreground:     var(--k-dark-stone-60);
+  --accent:               var(--k-warm-red-50);    /* Warm Red = brand accent */
+  --accent-foreground:    #FFFFFF;
+  --destructive:          #D62E2E;
+  --destructive-foreground:#FFFFFF;
+  --border:               var(--k-dark-stone-20);
+  --input:                var(--k-dark-stone-20);
+  --ring:                 var(--k-spruce-60);
+
+  /* -------------------------------------------------------------
+     Shidoka semantic aliases ($k-* naming)
+     These mirror Shidoka's exported semantic tokens, so any
+     Shidoka-native consumer can translate 1:1.
+     ------------------------------------------------------------- */
+  --k-background-page:         #FFFFFF;
+  --k-background-container:    var(--k-cool-gray-10);
+  --k-background-ui:           var(--k-dark-stone-10);
+  --k-text-primary:            var(--k-dark-stone-90);
+  --k-text-secondary:          var(--k-cool-gray-60);
+  --k-text-link:               var(--k-spruce-60);
+  --k-text-link-hover:         var(--k-spruce-70);
+  --k-text-link-pressed:       var(--k-spruce-80);
+  --k-color-border-subtle:     var(--k-dark-stone-20);
+  --k-color-border-strong:     var(--k-dark-stone-40);
+
+  /* AI surface tints — Shidoka's 'Opacity.AI' convention */
+  --k-ai-spruce-06:    rgba(41, 112, 122, 0.06);
+  --k-ai-spruce-12:    rgba(41, 112, 122, 0.12);
+  --k-ai-spruce-20:    rgba(41, 112, 122, 0.20);
+  --k-ai-warm-red-06:  rgba(255, 70, 45, 0.06);
+  --k-ai-warm-red-12:  rgba(255, 70, 45, 0.12);
+  --k-ai-warm-red-20:  rgba(255, 70, 45, 0.20);
+
+  /* Foreground ramp (what preview markup actually consumes) */
+  --fg-1:        var(--k-dark-stone-90);   /* titles, KPI numbers */
+  --fg-2:        var(--k-cool-gray-70);    /* body */
+  --fg-muted:    var(--k-cool-gray-50);    /* helper, captions */
+  --fg-subtle:   var(--k-cool-gray-40);    /* icons idle */
+  --fg-inverse:  #FFFFFF;
+
+  --bg-1:        #FFFFFF;                  /* cards, main surface */
+  --bg-2:        var(--k-cool-gray-10);    /* page bg, table stripe */
+  --bg-3:        var(--k-cool-gray-20);    /* hover, secondary chip */
+  --border-1:    var(--k-dark-stone-20);   /* default border */
+  --border-2:    var(--k-dark-stone-30);   /* emphasised */
+
+  /* -------------------------------------------------------------
+     Status taxonomy — canonical, pair with icon AND label
+     (never color-only; a11y rule from the DS brief)
+     ------------------------------------------------------------- */
+  /* -------------------------------------------------------------
+     Shidoka RAG status taxonomy — Critical / Error / Warning /
+     Success / Information. Stops 10 (bg), 20 (border), 100 (solid),
+     110 (dark/fg). Pair every color with icon + label — never
+     color-only.
+     ------------------------------------------------------------- */
+
+  /* Critical (severe failure, data loss) */
+  --k-status-critical-10:  #F9E3E8;
+  --k-status-critical-20:  #F0B4C0;
+  --k-status-critical-100: #A8001F;
+  --k-status-critical-110: #6B0014;
+
+  /* Error (actionable failure) */
+  --k-status-error-10:  #FDE7E2;
+  --k-status-error-20:  #FBB8AB;
+  --k-status-error-100: #D62E2E;
+  --k-status-error-110: #8A1E0D;
+
+  /* Warning */
+  --k-status-warning-10:  #FEF3CF;
+  --k-status-warning-20:  #FCE38F;
+  --k-status-warning-100: #E68A00;
+  --k-status-warning-110: #7A4800;
+
+  /* Success */
+  --k-status-success-10:  #E0F2E8;
+  --k-status-success-20:  #A8DDBF;
+  --k-status-success-100: #1F8F4A;
+  --k-status-success-110: #0D5C2E;
+
+  /* Information — uses Spruce ramp */
+  --k-status-info-10:  var(--k-spruce-10);
+  --k-status-info-20:  var(--k-spruce-20);
+  --k-status-info-100: var(--k-spruce-60);
+  --k-status-info-110: var(--k-spruce-80);
+
+  /* Legacy severity aliases (Critical / High / Medium / Low / OK)
+     mapped onto the Shidoka RAG scale. */
+  --sev-critical-bg:     var(--k-status-critical-10);
+  --sev-critical-fg:     var(--k-status-critical-110);
+  --sev-critical-border: var(--k-status-critical-20);
+  --sev-critical-solid:  var(--k-status-critical-100);
+
+  --sev-high-bg:     var(--k-status-warning-10);
+  --sev-high-fg:     var(--k-status-warning-110);
+  --sev-high-border: var(--k-status-warning-20);
+  --sev-high-solid:  var(--k-status-warning-100);
+
+  --sev-medium-bg:     var(--k-cool-gray-10);
+  --sev-medium-fg:     var(--k-cool-gray-70);
+  --sev-medium-border: var(--k-cool-gray-20);
+  --sev-medium-solid:  var(--k-cool-gray-50);
+
+  --sev-low-bg:     var(--k-status-success-10);
+  --sev-low-fg:     var(--k-status-success-110);
+  --sev-low-border: var(--k-status-success-20);
+  --sev-low-solid:  var(--k-status-success-100);
+
+  --sev-ok-bg:     var(--sev-low-bg);
+  --sev-ok-fg:     var(--sev-low-fg);
+  --sev-ok-solid:  var(--sev-low-solid);
+
+  /* Danger scale — used by agentic destructive confirm steps */
+  --danger-50:   var(--k-status-error-10);
+  --danger-100:  var(--k-status-error-20);
+  --danger-600:  var(--k-status-error-100);
+  --danger-700:  var(--k-status-error-110);
+
+  /* Graph node status: Healthy / Degraded / Impacted / Unknown */
+  --status-healthy:  var(--k-status-success-100);
+  --status-degraded: var(--k-status-warning-100);
+  --status-impacted: var(--k-warm-red-50);
+  --status-unknown:  var(--k-cool-gray-40);
+
+  /* Workflow states: Pending / Approved / Executed / Rejected */
+  --wf-pending:  var(--k-status-warning-100);
+  --wf-approved: var(--k-spruce-60);
+  --wf-executed: var(--k-spruce-70);
+  --wf-rejected: var(--k-cool-gray-50);
+
+  /* -------------------------------------------------------------
+     Typography — stack, sizes, weights
+     ------------------------------------------------------------- */
+  /* Shidoka pairs TWK Everett (display, 20px+) with Roboto (body,
+     14–18px, dense UI). --font-display and --font-sans are kept as
+     distinct tokens so consumers can pick either explicitly. */
+  --font-display: "TWK Everett", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:    "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-arabic:  "Noto Kufi Arabic", "Noto Naskh Arabic", var(--font-sans);
+
+  /* Type scale — expressed in px so it holds up in static HTML preview */
+  --t-display:   28px;   /* page title, KPI-hero */
+  --t-h1:        22px;   /* section heading */
+  --t-h2:        18px;   /* card title */
+  --t-h3:        14px;   /* small card title, strong label */
+  --t-body:      14px;   /* default body */
+  --t-small:     12px;   /* supporting copy */
+  --t-micro:     11px;   /* meta, badge, table micro */
+  --t-caption:   10px;   /* UPPERCASE eyebrow, tracking-wider */
+  --t-kpi:       28px;
+  --t-kpi-lg:    36px;
+
+  --lh-tight:    1.15;
+  --lh-snug:     1.35;
+  --lh-normal:   1.5;
+
+  --tracking-eyebrow: 0.14em;   /* uppercase captions */
+  --tracking-wide:    0.04em;
+
+  /* -------------------------------------------------------------
+     Spacing, radii, elevation, motion
+     ------------------------------------------------------------- */
+  /* Shidoka space tokens (xl breakpoint snapshot). Native Shidoka
+     names are preserved as aliases so design-token consumers can
+     map 1:1; the short --space-N names remain for preview markup. */
+  --k-space-quarter-x:    4px;   /* space-set-quarter-x  */
+  --k-space-half-x:       8px;   /* space-set-half-x     */
+  --k-space-three-quarter-x: 12px; /* space-set-three-quarter-x */
+  --k-space-1-x:         16px;   /* space-set-1-x        */
+  --k-space-1-and-half-x: 24px;  /* space-set-1-and-half-x */
+  --k-space-2-x:         32px;   /* space-set-2-x        */
+  --k-space-3-x:         48px;   /* space-set-3-x        */
+  --k-space-4-x:         64px;   /* space-set-4-x        */
+  --k-space-6-x:         96px;   /* space-set-6-x        */
+  --k-space-12-x:       192px;   /* space-set-12-x       */
+
+  --space-1:  var(--k-space-quarter-x);
+  --space-2:  var(--k-space-half-x);
+  --space-3:  var(--k-space-three-quarter-x);
+  --space-4:  var(--k-space-1-x);
+  --space-5:  20px;
+  --space-6:  var(--k-space-1-and-half-x);
+  --space-8:  var(--k-space-2-x);
+  --space-10: 40px;
+  --space-12: var(--k-space-3-x);
+
+  /* Shidoka radii — 2/4/8/16. System is restrained;
+     buttons + inputs stay small (4px), cards use 8, dialogs 16. */
+  --k-radius-xs:   2px;
+  --k-radius-sm:   4px;
+  --k-radius-md:   8px;
+  --k-radius-lg:  16px;
+  --k-radius-pill: 9999px;
+
+  --radius:     var(--k-radius-md);   /* 8px — card default */
+  --radius-sm:  var(--k-radius-sm);   /* 4px — buttons, inputs, chips */
+  --radius-md:  var(--k-radius-sm);   /* alias */
+  --radius-lg:  var(--k-radius-lg);   /* 16px — dialog, drawer */
+  --radius-pill: var(--k-radius-pill);
+
+  /* Very restrained shadow system — the app leans on borders, not shadows */
+  --shadow-none:  none;
+  --shadow-sm:    0 1px 2px rgba(15,23,42,.04);
+  --shadow-card:  0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.03);
+  --shadow-pop:   0 4px 16px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.06);
+  --shadow-drawer:0 20px 48px rgba(15,23,42,.18);
+
+  --motion-fast:   120ms;
+  --motion-base:   200ms;
+  --motion-slow:   300ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:      cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* =============================================================
+   Semantic element styles — use these directly in preview HTML
+   ============================================================= */
+html, body {
+  font-family: var(--font-sans);
+  color: var(--fg-2);
+  background: var(--bg-1);
+  font-size: var(--t-body);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .t-display {
+  font-family: var(--font-display);
+  font-size: var(--t-display);
+  line-height: var(--lh-tight);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--fg-1);
+}
+h2, .t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-h1);
+  line-height: var(--lh-snug);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--fg-1);
+}
+h3, .t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  line-height: var(--lh-snug);
+  font-weight: 500;
+  color: var(--fg-1);
+}
+h4, .t-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--t-h3);
+  line-height: var(--lh-snug);
+  font-weight: 500;
+  color: var(--fg-1);
+}
+p, .t-body { font-size: var(--t-body); line-height: var(--lh-normal); color: var(--fg-2); }
+.t-small   { font-size: var(--t-small); color: var(--fg-muted); }
+.t-micro   { font-size: var(--t-micro); color: var(--fg-muted); }
+.t-caption {
+  font-size: var(--t-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+.t-kpi     { font-family: var(--font-display); font-size: var(--t-kpi);    font-weight: 500; letter-spacing: -0.01em; color: var(--fg-1); }
+.t-kpi-lg  { font-family: var(--font-display); font-size: var(--t-kpi-lg); font-weight: 500; letter-spacing: -0.015em; color: var(--fg-1); }
+
+code, kbd, samp, .t-mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--bg-3);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  color: var(--fg-1);
+}
+
+/* RTL */
+[dir="rtl"], .font-arabic {
+  font-family: var(--font-arabic);
+}
+
+/* =============================================================
+   AGENTIC PRIMITIVES
+   -------------------------------------------------------------
+   A primitive is "agentic" when it represents a decision the
+   system made AND lets the user push back on it inline. Visual
+   contract:
+     · dotted underline on the primary value (invites click)
+     · trailing ••• indicator on hover / focus-within
+     · chevron-action surfaces next to the badge on hover
+     · click opens a popover with 2–4 targeted actions
+   Non-destructive actions apply instantly. Destructive actions
+   (e.g. teach-the-agent that affects future decisions) require
+   a confirm step inside the popover. Every override is logged
+   to the "Learned from you" inbox.
+   ============================================================= */
+
+.agentic {
+  --agentic-accent: var(--k-spruce-60);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: background 120ms ease;
+}
+.agentic .agentic-label {
+  border-bottom: 1px dotted currentColor;
+  padding-bottom: 0px;
+}
+.agentic .agentic-chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  margin-left: 2px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateX(-2px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  color: currentColor;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.agentic:hover .agentic-chev,
+.agentic:focus-visible .agentic-chev,
+.agentic[aria-expanded="true"] .agentic-chev {
+  opacity: 0.9;
+  transform: translateX(0);
+}
+.agentic:focus-visible {
+  box-shadow: 0 0 0 2px rgba(41, 112, 122, 0.35);
+  border-radius: 999px;
+}
+
+/* Popover */
+.agentic-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  min-width: 240px;
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+  padding: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--fg-1);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.agentic[aria-expanded="true"] + .agentic-pop,
+.agentic-pop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.agentic-pop header {
+  padding: 6px 8px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.agentic-pop header .ap-title {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.agentic-pop header .ap-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--fg-muted);
+}
+.agentic-pop .ap-divider {
+  height: 1px;
+  background: var(--border-1);
+  margin: 4px -6px;
+}
+.agentic-pop button.ap-action {
+  width: 100%;
+  text-align: left;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  color: var(--fg-1);
+  cursor: pointer;
+}
+.agentic-pop button.ap-action:hover { background: var(--bg-3); }
+.agentic-pop button.ap-action .ap-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}
+.agentic-pop button.ap-action .ap-sub {
+  font-size: 10.5px;
+  color: var(--fg-muted);
+  display: block;
+  margin-top: 1px;
+  line-height: 1.35;
+}
+.agentic-pop button.ap-action.is-destructive { color: var(--danger-600); }
+.agentic-pop button.ap-action.is-destructive .ap-icon { color: var(--danger-600); }
+
+/* Confirm step inside popover */
+.agentic-pop .ap-confirm {
+  padding: 8px 8px 6px;
+  background: var(--danger-50);
+  border-radius: var(--radius-sm);
+  margin: 2px;
+}
+.agentic-pop .ap-confirm p {
+  margin: 0 0 8px;
+  font-size: 11.5px;
+  color: var(--danger-700);
+  line-height: 1.4;
+}
+.agentic-pop .ap-confirm .ap-confirm-row {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.agentic-pop .ap-confirm button {
+  font: inherit;
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-1);
+  background: #fff;
+  cursor: pointer;
+}
+.agentic-pop .ap-confirm button.ap-primary {
+  background: var(--danger-600);
+  border-color: var(--danger-600);
+  color: #fff;
+}
+
+/* Teaching-signal toast (non-destructive feedback) */
+.agentic-toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--fg-1);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  z-index: 100;
+  box-shadow: var(--shadow-pop);
+}
+.agentic-toast[data-show="true"] {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.agentic-toast .at-dot {
+  width: 6px; height: 6px; border-radius: 999px;
+  background: var(--kyn-primary-400);
+}
+.agentic-toast button {
+  font: inherit;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .agentic, .agentic .agentic-chev, .agentic-pop, .agentic-toast { transition: none; }
+}
+
+/* =============================================================
+   Iconography — Shidoka Icon Library
+   -------------------------------------------------------------
+   Icons come from @kyndryl-design-system/shidoka-icons, exported
+   from the Shidoka Icon Library .fig. Source viewBox is 28×28 at
+   a 32×32 bounding box (icons sit inset with 2px padding).
+
+   Usage — inline sprite + <use>:
+     1. Include assets/icons/sprite.svg once per page via fetch +
+        inline injection (see snippet in README).
+     2. Mark up:  <svg class="ki"><use href="#icon-dashboard"/></svg>
+     3. Color via currentColor — inherits text color.
+
+   Sizes map to type scale per Shidoka guidance:
+     .ki-14  → pairs with 14pt body (menu, inline labels)
+     .ki-16  → pairs with 16pt body (default UI)
+     .ki-20  → pairs with 20pt heads, standalone buttons
+     .ki-24  → section heads, toolbars
+     .ki-32  → feature tiles, empty states
+   ============================================================= */
+
+.ki {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: currentColor;
+  fill: currentColor;
+  display: inline-block;
+  vertical-align: -2px;
+}
+.ki-14 { width: 14px; height: 14px; }
+.ki-16 { width: 16px; height: 16px; }
+.ki-20 { width: 20px; height: 20px; }
+.ki-24 { width: 24px; height: 24px; }
+.ki-32 { width: 32px; height: 32px; }
+.ki-48 { width: 48px; height: 48px; }
+
+/* Tonal wrappers — inverse chip backgrounds so brand color pops */
+.ki-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #F1F5F9;
+  color: #475569;
+}
+.ki-chip.is-brand { background: rgba(255,70,45,0.08); color: var(--k-warm-red-50); }
+.ki-chip.is-spruce { background: rgba(41,112,122,0.08); color: var(--k-spruce-60); }
+.ki-chip.is-success { background: #D1FAE5; color: #065F46; }
+.ki-chip.is-warn { background: #FEF3C7; color: #92400E; }
+.ki-chip.is-critical { background: #FEE2E2; color: #991B1B; }
