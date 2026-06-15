@@ -3,15 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AnaCredit · The Synthetic Cohort</title>
+<title>AnaCredit · BiL Demo</title>
 <link rel="stylesheet" href="colors_and_type.css" />
 <link rel="stylesheet" href="collateral/collateral.css" />
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <style>
-  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg-2); }
-  #root { min-height: 100%; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg-2); overflow: hidden; }
+  #root { height: 100%; }
+  .view-toggle { padding: 7px 18px; border-radius: 999; border: none; cursor: pointer; font-family: var(--font-sans); font-size: 12px; font-weight: 600; transition: background 0.14s ease, color 0.14s ease; }
+  .view-toggle.active { background: #fff; color: var(--fg-1); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .view-toggle:not(.active) { background: transparent; color: var(--fg-muted); }
+  .ts-arrow {
+    width: 46px; height: 46px; border-radius: 999px; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 19px;
+    font-family: var(--font-sans); transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  }
+  .ts-arrow:hover:not(:disabled) { transform: scale(1.08); }
+  .ts-arrow:disabled { opacity: 0.3; cursor: default; }
+  .ts-rail-item { cursor: pointer; transition: background 0.14s ease, border-color 0.14s ease; }
   .ch-tile { cursor: pointer; transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease; }
   .ch-tile:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(15,23,42,0.14); border-color: var(--k-spruce-40); }
   .ch-tile:hover .ch-cta { background: var(--k-spruce-60); color: #fff; }
@@ -30,6 +41,8 @@
 <script type="text/babel" src="collateral/personas.jsx"></script>
 <script type="text/babel" src="bil-os/persona-orb.jsx"></script>
 <script type="text/babel" src="bil-os/talk.jsx"></script>
+<script type="text/babel" src="bil-os/shell.jsx"></script>
+<script type="text/babel" src="bil-os/portal.jsx"></script>
 
 <script type="text/babel">
 const { useState, useEffect, useMemo, useRef } = React;
@@ -160,44 +173,169 @@ function PersonaModal({ index, onClose, onNav }) {
   );
 }
 
-function CohortPage() {
+/* ── Target State Screens (inline) ── */
+const TS_SCREENS = [
+  { wf: "WF-01", title: "Data intake", comp: "PortalIntake", moments: "D1", color: "#29707A",
+    desc: "Version-aware before any policy logic runs — the run starts only on a supported schema." },
+  { wf: "WF-02", title: "Validation run", comp: "PortalRun", moments: "D2–D4", color: "#8A4FBF",
+    desc: "The deterministic Policy-as-Code layer is authoritative; the agent explains and suggests — never decides." },
+  { wf: "WF-03", title: "Exception review", comp: "PortalReview", moments: "D5", color: "#E68A00",
+    desc: "Human-in-the-loop — no approval without a reason, written to the Trust Record." },
+  { wf: "WF-04", title: "Summary & evidence", comp: "PortalEvidence", moments: "D6–D7", color: "#1F5580",
+    desc: "The run replays from this pack alone — chain of custody complete by construction." },
+];
+
+function ScreenStage({ children }) {
+  const ref = useRef(null);
+  const [scale, setScale] = useState(0);
+  const W = 1440, H = 900;
+  useEffect(() => {
+    const el = ref.current;
+    const fit = () => { const r = el.getBoundingClientRect(); setScale(Math.min((r.width - 8) / W, (r.height - 8) / H)); };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return (
+    <div ref={ref} style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      {scale > 0 ? (
+        <div style={{ width: W * scale, height: H * scale, flex: "0 0 auto" }}>
+          <div style={{ width: W, height: H, transform: `scale(${scale})`, transformOrigin: "top left", borderRadius: 12, overflow: "hidden", boxShadow: "0 24px 64px rgba(15,23,42,0.22)", border: "1px solid var(--border-1)", background: "#fff" }}>
+            {children}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function TargetStateView() {
+  const [i, setI] = useState(0);
+  const s = TS_SCREENS[i];
+  const Comp = window[s.comp];
+  const go = (n) => setI(Math.max(0, Math.min(TS_SCREENS.length - 1, n)));
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowRight") setI((v) => Math.min(TS_SCREENS.length - 1, v + 1));
+      else if (e.key === "ArrowLeft") setI((v) => Math.max(0, v - 1));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, display: "flex" }}>
+      <aside style={{ flex: "0 0 290px", background: "#fff", borderRight: "1px solid var(--border-1)", padding: "20px 16px", display: "flex", flexDirection: "column", gap: 10, overflow: "auto" }}>
+        <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--fg-muted)", padding: "0 6px 2px" }}>The to-be journey · 4 screens</div>
+        {TS_SCREENS.map((sc, k) => {
+          const active = k === i;
+          return (
+            <React.Fragment key={sc.wf}>
+              <div className="ts-rail-item" onClick={() => setI(k)} style={{
+                display: "flex", gap: 12, padding: "13px 13px", borderRadius: 10,
+                background: active ? "var(--bg-2)" : "transparent",
+                border: `1px solid ${active ? sc.color : "var(--border-1)"}`,
+                borderLeft: `4px solid ${active ? sc.color : "var(--border-1)"}`,
+              }}>
+                <span style={{ width: 30, height: 30, borderRadius: 999, flex: "0 0 auto", background: active ? sc.color : "var(--bg-3)", color: active ? "#fff" : "var(--fg-muted)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 14 }}>{k + 1}</span>
+                <span style={{ minWidth: 0 }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 14.5, color: "var(--fg-1)" }}>{sc.title}</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: sc.color, border: `1px solid ${sc.color}`, borderRadius: 999, padding: "1px 6px" }}>{sc.wf}</span>
+                  </span>
+                  <span style={{ display: "block", fontSize: 11.5, color: "var(--fg-muted)", marginTop: 4, lineHeight: 1.4, textWrap: "pretty" }}>{sc.desc}</span>
+                  <span style={{ display: "inline-block", marginTop: 6, fontFamily: "var(--font-mono)", fontSize: 9.5, color: "var(--k-warm-red-50)", background: "rgba(255,70,45,0.06)", border: "1px solid rgba(255,70,45,0.3)", borderRadius: 4, padding: "1px 7px" }}>{sc.moments}</span>
+                </span>
+              </div>
+              {k < TS_SCREENS.length - 1 ? <div style={{ textAlign: "center", color: "var(--fg-subtle)", fontSize: 13, lineHeight: 0.4 }}>↓</div> : null}
+            </React.Fragment>
+          );
+        })}
+      </aside>
+      <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: "flex", flexDirection: "column", background: "var(--bg-2)" }}>
+        <div style={{ flex: "0 0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "13px 24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ width: 26, height: 26, borderRadius: 999, background: s.color, color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 13 }}>{i + 1}</span>
+            <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 17, color: "var(--fg-1)" }}>{s.title}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-muted)" }}>{s.wf} · {s.moments}</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <button className="ts-arrow" onClick={() => go(i - 1)} disabled={i === 0} style={{ background: "#fff", color: "var(--fg-1)", border: "1px solid var(--border-1)", boxShadow: "0 2px 8px rgba(15,23,42,0.1)" }}>←</button>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)", minWidth: 44, textAlign: "center" }}>{i + 1} / {TS_SCREENS.length}</span>
+            <button className="ts-arrow" onClick={() => go(i + 1)} disabled={i === TS_SCREENS.length - 1} style={{ background: "var(--k-warm-red-50)", color: "#fff", boxShadow: "0 8px 22px rgba(255,70,45,0.35)" }}>→</button>
+          </div>
+        </div>
+        <div style={{ flex: 1, minHeight: 0, padding: "0 24px 22px", display: "flex", flexDirection: "column" }}>
+          <ScreenStage key={s.wf}>{Comp ? <Comp /> : null}</ScreenStage>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Cohort View ── */
+function CohortView() {
   const [open, setOpen] = useState(null);
   const nav = (d) => setOpen((o) => (o + d + PERSONAS.length) % PERSONAS.length);
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", fontFamily: "var(--font-sans)", color: "var(--fg-2)" }}>
-      {/* header */}
-      <header style={{ flex: "0 0 auto", background: "#fff", borderBottom: "1px solid var(--border-1)", padding: "22px 40px" }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 28 }}>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--k-spruce-70)" }}>Synthetic cohort · AI composites from real transcripts</div>
-            <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 34, color: "var(--fg-1)", letterSpacing: "-0.015em", marginTop: 6, lineHeight: 1.1 }}>The ten voices in the room</div>
-            <div style={{ fontSize: 14, color: "var(--fg-muted)", marginTop: 8, maxWidth: "76ch", lineHeight: 1.5, textWrap: "pretty" }}>
-              Each persona is an AI stand-in built from the pre-work interviews — not a real person. <strong style={{ color: "var(--fg-1)" }}>Click any card</strong> to open their full profile, then switch to <strong style={{ color: "var(--fg-1)" }}>Talk</strong> to interrogate them with the answers grounded in their transcripts.
-            </div>
-          </div>
-          <img src="assets/kyndryl-vital-logo.png" alt="Kyndryl Vital" style={{ height: 30, flex: "0 0 auto", marginBottom: 4 }} />
-        </div>
-      </header>
-
-      {/* grid */}
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "auto" }}>
       <main style={{ flex: 1, padding: "30px 40px 56px" }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 18 }}>
-          {PERSONAS.map((p, i) => <CohortTile key={p.id} p={p} onOpen={() => setOpen(i)} />)}
+        <div style={{ maxWidth: 1320, margin: "0 auto" }}>
+          <div style={{ fontSize: 14, color: "var(--fg-muted)", marginBottom: 22, maxWidth: "76ch", lineHeight: 1.5, textWrap: "pretty" }}>
+            Each persona is an AI stand-in built from the pre-work interviews — not a real person. <strong style={{ color: "var(--fg-1)" }}>Click any card</strong> to open their full profile, then switch to <strong style={{ color: "var(--fg-1)" }}>Talk</strong> to interrogate them with the answers grounded in their transcripts.
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 18 }}>
+            {PERSONAS.map((p, i) => <CohortTile key={p.id} p={p} onOpen={() => setOpen(i)} />)}
+          </div>
         </div>
       </main>
-
-      {/* footer */}
       <footer style={{ flex: "0 0 auto", background: "#fff", borderTop: "1px solid var(--border-1)", padding: "14px 40px", textAlign: "center", fontSize: 12, color: "var(--fg-muted)" }}>
         Synthetic cohort · composites, not real interviews · BiL × Kyndryl Vital · Kyndryl Agentic Framework
       </footer>
-
       {open !== null ? <PersonaModal index={open} onClose={() => setOpen(null)} onNav={nav} /> : null}
     </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<CohortPage />);
+/* ── App Shell with Toggle ── */
+function App() {
+  const [view, setView] = useState("cohort");
+
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", fontFamily: "var(--font-sans)", color: "var(--fg-2)" }}>
+      {/* shared header with toggle */}
+      <header style={{ flex: "0 0 auto", background: "#fff", borderBottom: "1px solid var(--border-1)", padding: "16px 40px" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, minWidth: 0 }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--k-spruce-70)" }}>
+                {view === "cohort" ? "Synthetic cohort · AI composites from real transcripts" : "Envisioned target state · agentic AI process"}
+              </div>
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 28, color: "var(--fg-1)", letterSpacing: "-0.015em", marginTop: 4, lineHeight: 1.1 }}>
+                {view === "cohort" ? "The ten voices in the room" : "AnaCredit Validation Portal"}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "0 0 auto" }}>
+            <div style={{ display: "flex", background: "var(--bg-2)", borderRadius: 999, padding: 3, gap: 2 }}>
+              <button className={"view-toggle" + (view === "cohort" ? " active" : "")} onClick={() => setView("cohort")}>Personas</button>
+              <button className={"view-toggle" + (view === "target" ? " active" : "")} onClick={() => setView("target")}>Target State</button>
+            </div>
+            <img src="assets/kyndryl-vital-logo.png" alt="Kyndryl Vital" style={{ height: 26, flex: "0 0 auto", marginLeft: 14 }} />
+          </div>
+        </div>
+      </header>
+
+      {/* view content */}
+      {view === "cohort" ? <CohortView /> : <TargetStateView />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 </script>
 </body>
 </html>
