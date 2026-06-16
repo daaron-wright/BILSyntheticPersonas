@@ -9,7 +9,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.ANTHROPIC_API_KEY || '';
-const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
 const ELEVEN_API_KEY = process.env.ELEVENLABS_API_KEY || '';
 const DEFAULT_VOICE_ID = '35TZ7cBoYATiH37sLH1S';
 
